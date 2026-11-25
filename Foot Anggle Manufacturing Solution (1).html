@@ -1,0 +1,2607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foot Anggle Manufacturing Solution</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#fff8f3',
+              100: '#ffede0',
+              200: '#ffd6ba',
+              600: '#c2410c',
+              700: '#9a3412',
+              800: '#7c2d12',
+              900: '#431407'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-image:
+        radial-gradient(at 0% 0%, rgba(194, 65, 12, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(15, 23, 42, 0.04) 0px, transparent 50%);
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #ffffff !important; }
+      .print-card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+
+      body.printing-job-card #app-shell,
+      body.printing-karigar-report #app-shell,
+      body.printing-dispatch-doc #app-shell { display: none !important; }
+
+      body.printing-job-card #job-card-pdf-modal {
+        position: static !important;
+        display: block !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      body.printing-job-card #job-card-pdf-sheet {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+
+      body.printing-karigar-report #karigar-report-pdf-modal {
+        position: static !important;
+        display: block !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      body.printing-karigar-report #karigar-report-pdf-sheet {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+        max-width: 100% !important;
+      }
+
+      body.printing-dispatch-doc #dispatch-doc-pdf-modal {
+        position: static !important;
+        display: block !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      body.printing-dispatch-doc #dispatch-doc-pdf-sheet {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- Toast Notification Banner -->
+  <div
+    id="toast-banner"
+    role="status"
+    aria-live="polite"
+    class="no-print fixed top-4 right-4 z-50 hidden max-w-sm rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold shadow-lg border transition-all"
+  ></div>
+
+  <div id="app-shell" class="flex-1 flex flex-col">
+    <!-- Top Header Bar -->
+    <header class="no-print glass-panel border-b border-slate-200/90 sticky top-0 z-30 shadow-xs">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3.5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3.5">
+            <div class="h-11 w-11 rounded-2xl bg-gradient-to-br from-brand-600 to-amber-700 text-white flex items-center justify-center font-extrabold text-sm tracking-wider shadow-md shadow-brand-600/20 ring-1 ring-white/30">
+              FA
+            </div>
+            <div>
+              <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-slate-900">
+                Foot Anggle Manufacturing Solution
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Navigation Tabs -->
+        <nav aria-label="Main Navigation" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1">
+          <button id="tab-btn-masters" type="button" onclick="switchTab('masters')" class="shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+            Masters
+          </button>
+          <button id="tab-btn-po" type="button" onclick="switchTab('po')" class="shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+            PO Registration
+          </button>
+          <button id="tab-btn-production" type="button" onclick="switchTab('production')" class="shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+            Production
+          </button>
+          <button id="tab-btn-dispatch" type="button" onclick="switchTab('dispatch')" class="shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+            Dispatch
+          </button>
+          <button id="tab-btn-payout" type="button" onclick="switchTab('payout')" class="shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+            Payout
+          </button>
+          <button id="tab-btn-report" type="button" onclick="switchTab('report')" class="shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+            Report
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+      <!-- Top KPI Bar -->
+      <section id="kpi-grid" class="no-print grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"></section>
+
+      <!-- 1. MASTERS TAB -->
+      <section id="section-masters" class="tab-panel space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Article Master -->
+          <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+            <div class="border-b border-slate-100 pb-3">
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Article Master</h2>
+              <p class="text-xs text-slate-500">Create and manage article codes for POs, production &amp; dispatch</p>
+            </div>
+
+            <form id="article-master-form" onsubmit="handleArticleMasterSubmit(event)" class="space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="sm:col-span-3">
+                  <label for="master-article-code" class="block text-xs font-bold text-slate-700 mb-1">Article Code *</label>
+                  <input id="master-article-code" type="text" required placeholder="e.g., FA-502" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                </div>
+              </div>
+              <button type="submit" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                + Add Article
+              </button>
+            </form>
+
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Saved Articles</h3>
+              <div id="articles-rates-table" class="space-y-2"></div>
+            </div>
+          </div>
+
+          <!-- Karigar Master -->
+          <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+            <div class="border-b border-slate-100 pb-3">
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Karigar Master</h2>
+              <p class="text-xs text-slate-500">Add karigars and assign each karigar to one manufacturing process</p>
+            </div>
+
+            <form id="karigar-master-form" onsubmit="handleKarigarMasterSubmit(event)" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label for="karigar-name-input" class="block text-xs font-bold text-slate-700 mb-1">Karigar Name *</label>
+                  <input id="karigar-name-input" type="text" required placeholder="e.g., Ramesh Kumar" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                </div>
+                <div>
+                  <label for="karigar-phone-input" class="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
+                  <input id="karigar-phone-input" type="tel" placeholder="Optional" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                </div>
+                <div>
+                  <label for="karigar-process-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Assigned Process *</label>
+                  <select id="karigar-process-dropdown" required class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+              </div>
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                + Add Karigar
+              </button>
+            </form>
+
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Mapped Karigars</h3>
+              <div id="karigars-master-list" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Party / Buyer Master -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+          <div class="border-b border-slate-100 pb-3">
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Party / Buyer Master</h2>
+            <p class="text-xs text-slate-500">Save buyer details (Name, Address, GST Number) mapped to Dispatch Bills &amp; Challans</p>
+          </div>
+
+          <form id="party-master-form" onsubmit="handlePartySubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label for="party-name-input" class="block text-xs font-bold text-slate-700 mb-1">Party Name *</label>
+              <input id="party-name-input" type="text" required placeholder="e.g., Royal Shoes" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+            </div>
+            <div>
+              <label for="party-gst-input" class="block text-xs font-bold text-slate-700 mb-1">GST Number</label>
+              <input id="party-gst-input" type="text" placeholder="e.g., 09AABCR1234F1Z2" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold uppercase focus:outline-none focus:ring-2 focus:ring-amber-500" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="party-address-input" class="block text-xs font-bold text-slate-700 mb-1">Address *</label>
+              <input id="party-address-input" type="text" required placeholder="e.g., Shop 14, MG Road, Agra, UP" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+            </div>
+            <div class="sm:col-span-2 lg:col-span-4">
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                + Add Party / Buyer
+              </button>
+            </div>
+          </form>
+
+          <div id="parties-master-list" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- 2. PO REGISTRATION TAB -->
+      <section id="section-po" class="tab-panel hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h2 id="po-form-heading" class="text-base sm:text-lg font-extrabold text-slate-900">Create Purchase Order</h2>
+              <p class="text-xs text-slate-500">Enter PO details, material specifications, and compact size quantities (5–12)</p>
+            </div>
+            <button id="po-cancel-btn" type="button" onclick="cancelPoEdit()" class="hidden px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100">
+              Cancel Edit
+            </button>
+          </div>
+
+          <form id="po-registration-form" onsubmit="handlePoSubmit(event)" class="space-y-5">
+            <input type="hidden" id="po-editing-id" value="" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label for="po-number-input" class="block text-xs font-bold text-slate-700 mb-1">PO Number *</label>
+                <input id="po-number-input" type="text" required placeholder="e.g., PO-1024" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="po-party-input" class="block text-xs font-bold text-slate-700 mb-1">Party Name *</label>
+                <input id="po-party-input" type="text" list="po-party-datalist" required placeholder="e.g., Royal Shoes" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                <datalist id="po-party-datalist"></datalist>
+              </div>
+              <div>
+                <label for="po-article-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Article *</label>
+                <select id="po-article-dropdown" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                <div class="mt-2.5">
+                  <label for="po-colour-input" class="block text-xs font-bold text-slate-700 mb-1">Colour</label>
+                  <input id="po-colour-input" type="text" placeholder="e.g., Black / Tan" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                </div>
+              </div>
+              <div>
+                <label for="po-order-date" class="block text-xs font-bold text-slate-700 mb-1">Order Date *</label>
+                <input id="po-order-date" type="date" required class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label for="po-delivery-date" class="block text-xs font-bold text-slate-700 mb-1">Delivery Date *</label>
+                <input id="po-delivery-date" type="date" required class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="po-leather-input" class="block text-xs font-bold text-slate-700 mb-1">Leather</label>
+                <input id="po-leather-input" type="text" placeholder="e.g., Nappa Black" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="po-lining-input" class="block text-xs font-bold text-slate-700 mb-1">Lining</label>
+                <input id="po-lining-input" type="text" placeholder="e.g., Goat Lining" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="po-sole-input" class="block text-xs font-bold text-slate-700 mb-1">Sole</label>
+                <input id="po-sole-input" type="text" placeholder="e.g., TPR Double Density" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+            </div>
+
+            <div>
+              <label for="po-special-req-input" class="block text-xs font-bold text-slate-700 mb-1">Special Requirement</label>
+              <input id="po-special-req-input" type="text" placeholder="e.g., Custom sock print, box packing note" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+            </div>
+
+            <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Size Quantities (5–12)</span>
+                <span id="po-total-pairs-pill" class="text-xs font-extrabold px-3 py-0.5 rounded-full bg-amber-100 text-amber-800">Total: 0 Pairs</span>
+              </div>
+              <div id="po-size-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-1.5"></div>
+            </div>
+
+            <div class="flex justify-end">
+              <button id="po-save-btn" type="submit" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                Save Purchase Order
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Saved Purchase Orders</h3>
+              <p class="text-xs text-slate-500">Only ordered sizes with quantity greater than zero are displayed</p>
+            </div>
+            <span id="po-list-count" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">0 POs</span>
+          </div>
+          <div id="saved-pos-container" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- 3. PRODUCTION TAB -->
+      <section id="section-production" class="tab-panel hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+            <div class="border-b border-slate-100 pb-3">
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Issue Batch Job Card</h2>
+              <p class="text-xs text-slate-500">Select PO, Process Stage, mapped Karigar, and eligible batch quantities</p>
+            </div>
+
+            <form id="job-card-form" onsubmit="handleJobCardSubmit(event)" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label for="jc-po-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Purchase Order *</label>
+                  <select id="jc-po-dropdown" onchange="refreshJobCardFormState()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+                <div>
+                  <label for="jc-stage-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Process Stage *</label>
+                  <select id="jc-stage-dropdown" onchange="refreshJobCardFormState()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+                <div>
+                  <label for="jc-karigar-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Mapped Karigar *</label>
+                  <select id="jc-karigar-dropdown" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+                </div>
+              </div>
+
+              <div id="jc-gate-banner" class="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs font-semibold text-amber-900"></div>
+
+              <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Eligible Size Quantities</span>
+                  <span id="jc-total-pairs-pill" class="text-xs font-extrabold px-3 py-0.5 rounded-full bg-slate-200 text-slate-800">Total: 0 Pairs</span>
+                </div>
+                <div id="jc-size-inputs-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-1.5"></div>
+              </div>
+
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                + Create Job Card
+              </button>
+              <button type="button" onclick="openHalfA4PreviewForCurrentSelection()" class="w-full py-2 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs sm:text-sm font-bold transition-colors">
+                PDF View (Half-A4 Job Card)
+              </button>
+            </form>
+          </div>
+
+          <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+            <div class="border-b border-slate-100 pb-3">
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Log Work-Done</h2>
+              <p class="text-xs text-slate-500">Record completed pairs per size &amp; stage quality checklist</p>
+            </div>
+
+            <form id="work-done-form" onsubmit="handleWorkDoneSubmit(event)" class="space-y-4">
+              <div>
+                <label for="wd-jobcard-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Select Active Job Card *</label>
+                <select id="wd-jobcard-dropdown" onchange="refreshWorkDoneFormState()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"></select>
+              </div>
+
+              <div id="wd-cutting-checklist-panel" class="hidden rounded-2xl border border-amber-300 bg-amber-50/80 p-3.5 space-y-2">
+                <div class="text-xs font-extrabold uppercase tracking-wider text-amber-900">Cutting Stage Quality Gate Checklist</div>
+                <p class="text-[11px] text-amber-800">
+                  <strong>Cutting OK</strong> unlocks <strong>Fitter</strong> and <strong>Socks Cutting OK</strong> unlocks <strong>Socks Making</strong>.
+                </p>
+                <div id="wd-cutting-already-done-banner" class="hidden rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-[11px] font-bold text-emerald-800"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  <label id="wd-label-cutting" class="flex items-center gap-2 rounded-xl bg-white border border-amber-200 px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer">
+                    <input id="wd-checklist-cutting" type="checkbox" class="h-4 w-4 rounded text-amber-600 focus:ring-amber-500" />
+                    <span>Cutting OK</span>
+                  </label>
+                  <label id="wd-label-socks-cutting" class="flex items-center gap-2 rounded-xl bg-white border border-amber-200 px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer">
+                    <input id="wd-checklist-socks-cutting" type="checkbox" class="h-4 w-4 rounded text-amber-600 focus:ring-amber-500" />
+                    <span>Socks Cutting OK</span>
+                  </label>
+                </div>
+              </div>
+
+              <div id="wd-stage-checklist-panel" class="hidden rounded-2xl border border-indigo-300 bg-indigo-50/80 p-3.5 space-y-2">
+                <div id="wd-stage-checklist-title" class="text-xs font-extrabold uppercase tracking-wider text-indigo-900">Stage Quality Checklist</div>
+                <p id="wd-stage-checklist-desc" class="text-[11px] text-indigo-800"></p>
+                <label class="flex items-center gap-2 rounded-xl bg-white border border-indigo-200 px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer">
+                  <input id="wd-checklist-stage-ok" type="checkbox" class="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500" />
+                  <span id="wd-checklist-stage-label">Stage OK</span>
+                </label>
+              </div>
+
+              <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Completed Pairs by Size</span>
+                  <span id="wd-total-pairs-pill" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Done: 0 Pairs</span>
+                </div>
+                <div id="wd-size-inputs-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-1.5"></div>
+              </div>
+
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                Save Work-Done
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Active Job Cards (Process-Wise)</h3>
+              <p class="text-xs text-slate-500">Filter by process and open Half-A4 PDF Job Cards</p>
+            </div>
+            <span id="active-jc-count" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">0 Job Cards</span>
+          </div>
+          <div id="jc-process-filter-tabs" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1"></div>
+          <div id="active-jobcards-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- 4. DISPATCH TAB -->
+      <section id="section-dispatch" class="tab-panel hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div class="border-b border-slate-100 pb-3">
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Finished Goods Dispatch (Bill / Challan)</h2>
+            <p class="text-xs text-slate-500">Select Bill or Challan and Reference PO — Party Name &amp; Address auto-fill from Party Master</p>
+          </div>
+
+          <form id="dispatch-form" onsubmit="handleDispatchSubmit(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label for="disp-doc-type" class="block text-xs font-bold text-slate-700 mb-1">Document Type *</label>
+                <select id="disp-doc-type" onchange="syncDispatchDocNumberPrefix()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                  <option value="Challan">Challan</option>
+                  <option value="Bill">Bill</option>
+                </select>
+              </div>
+              <div>
+                <label for="disp-doc-number" class="block text-xs font-bold text-slate-700 mb-1">Bill / Challan No. *</label>
+                <input id="disp-doc-number" type="text" required placeholder="e.g., CH-101" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="disp-date" class="block text-xs font-bold text-slate-700 mb-1">Dispatch Date *</label>
+                <input id="disp-date" type="date" required class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="disp-po-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Reference PO</label>
+                <select id="disp-po-dropdown" onchange="syncDispatchFromPoSelection()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label for="disp-party-name" class="block text-xs font-bold text-slate-700 mb-1">Party Name *</label>
+                <input id="disp-party-name" type="text" list="disp-party-datalist" required oninput="syncDispatchFromPartyInput()" placeholder="Select or type party name" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                <datalist id="disp-party-datalist"></datalist>
+              </div>
+              <div class="sm:col-span-2">
+                <label for="disp-party-address" class="block text-xs font-bold text-slate-700 mb-1">Party Address *</label>
+                <input id="disp-party-address" type="text" required placeholder="Auto-filled from Party Master or PO" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <div>
+                <label for="disp-article-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Article No. *</label>
+                <select id="disp-article-dropdown" onchange="syncDispatchRateFromArticle()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+              </div>
+              <div class="lg:col-span-2">
+                <label for="disp-article-summary" class="block text-xs font-bold text-slate-700 mb-1">Article Summary *</label>
+                <input id="disp-article-summary" type="text" required placeholder="e.g., Sizes 6–10 Black Leather Casuals" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="disp-quantity-input" class="block text-xs font-bold text-slate-700 mb-1">Quantity (Pairs) *</label>
+                <input id="disp-quantity-input" type="number" min="1" step="1" required oninput="recalculateDispatchAmount()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label for="disp-rate-input" class="block text-xs font-bold text-slate-700 mb-1">Rate / Pair (₹)</label>
+                <input id="disp-rate-input" type="number" min="0" step="0.5" oninput="recalculateDispatchAmount()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3">
+              <div class="text-xs font-bold text-slate-700">
+                Total Amount: <span id="disp-total-amount-preview" class="text-base font-extrabold text-emerald-700 ml-1">₹0</span>
+              </div>
+              <button type="submit" class="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors">
+                Generate Bill / Challan PDF
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-3">
+          <h3 class="text-base font-extrabold text-slate-900">Saved Dispatch Records</h3>
+          <div id="saved-dispatches-list" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- 5. PAYOUT TAB -->
+      <section id="section-payout" class="tab-panel hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Weekly Karigar Payouts (Saturday Cycle)</h2>
+              <p class="text-xs text-slate-500">Settle weekly wages, deduct or add advances, and record payout date</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+              <label for="payout-settlement-date" class="text-xs font-bold text-amber-900">Payout Date:</label>
+              <input id="payout-settlement-date" type="date" onchange="renderPayoutCards()" class="rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-xs font-extrabold text-slate-900" />
+              <span id="payout-day-label" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-200 text-amber-950">Saturday</span>
+            </div>
+          </div>
+
+          <!-- Rate Master -->
+          <div class="rounded-2xl bg-amber-50/70 border border-amber-200 p-4 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-extrabold text-slate-900">Article &amp; Karigar Rate Master (₹ / Pair)</h3>
+                <p class="text-xs text-slate-600">Set per-pair rate for each Article &amp; Karigar</p>
+              </div>
+              <span id="rate-master-count" class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900">0 Rates</span>
+            </div>
+
+            <form id="payout-rate-form" onsubmit="handleSaveKarigarArticleRate(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+              <div>
+                <label for="rate-article-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Article *</label>
+                <select id="rate-article-dropdown" onchange="prefillRateInputFromSelection()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold"></select>
+              </div>
+              <div>
+                <label for="rate-karigar-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Karigar *</label>
+                <select id="rate-karigar-dropdown" onchange="prefillRateInputFromSelection()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold"></select>
+              </div>
+              <div>
+                <label for="rate-amount-input" class="block text-xs font-bold text-slate-700 mb-1">Rate / Pair (₹) *</label>
+                <input id="rate-amount-input" type="number" min="0" step="0.5" required class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold" />
+              </div>
+              <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold shadow-sm">
+                Save Rate
+              </button>
+            </form>
+
+            <div id="saved-karigar-rates-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+          </div>
+
+          <!-- Add Advance -->
+          <form id="payout-advance-form" onsubmit="handleAddAdvance(event)" class="rounded-2xl bg-slate-50 border border-slate-200 p-4 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+            <div>
+              <label for="adv-karigar-dropdown" class="block text-xs font-bold text-slate-700 mb-1">Karigar *</label>
+              <select id="adv-karigar-dropdown" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold"></select>
+            </div>
+            <div>
+              <label for="adv-date-input" class="block text-xs font-bold text-slate-700 mb-1">Advance Date *</label>
+              <input id="adv-date-input" type="date" required class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium" />
+            </div>
+            <div>
+              <label for="adv-amount-input" class="block text-xs font-bold text-slate-700 mb-1">Advance Amount (₹) *</label>
+              <input id="adv-amount-input" type="number" min="1" step="1" required class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold" />
+            </div>
+            <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm">
+              + Add Advance
+            </button>
+          </form>
+
+          <div id="payout-karigar-cards" class="space-y-4"></div>
+
+          <div class="space-y-2 pt-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Recorded Payout Settlements</h3>
+            <div id="payout-history-list" class="space-y-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. REPORT TAB -->
+      <section id="section-report" class="tab-panel hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5 print-card">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Reports</h2>
+              <p class="text-xs text-slate-500">Click a report card below to expand its details</p>
+            </div>
+            <div id="report-active-actions" class="no-print flex flex-wrap items-center gap-2">
+              <button type="button" onclick="openKarigarReportPdfModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm">
+                PDF Preview
+              </button>
+              <button type="button" onclick="shareKarigarReportWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm">
+                Share (WhatsApp)
+              </button>
+            </div>
+          </div>
+
+          <!-- Clickable Report Cards -->
+          <div class="no-print grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <button id="report-card-karigar" type="button" onclick="selectReportView('karigar')" class="text-left rounded-2xl border-2 border-amber-600 bg-amber-50/70 p-4 transition-all">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Report 1</div>
+              <div class="text-sm font-extrabold text-slate-900 mt-0.5">Karigar-Wise Full History</div>
+              <p class="text-[11px] text-slate-600 mt-1">Date-wise work, pending job cards &amp; advance/payout history</p>
+            </button>
+
+            <button id="report-card-wip" type="button" onclick="selectReportView('wip')" class="text-left rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-slate-100 p-4 transition-all">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Report 2</div>
+              <div class="text-sm font-extrabold text-slate-900 mt-0.5">Work in Progress (WIP)</div>
+              <p class="text-[11px] text-slate-600 mt-1">Completed vs. pending pairs across Cutting, Fitter, Bottom, Pasting &amp; Finishing</p>
+            </button>
+
+            <button id="report-card-dispatch" type="button" onclick="selectReportView('dispatch')" class="text-left rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-slate-100 p-4 transition-all">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">Report 3</div>
+              <div class="text-sm font-extrabold text-slate-900 mt-0.5">Dispatch Summary</div>
+              <p class="text-[11px] text-slate-600 mt-1">Bills &amp; Challans issued by date, party, article &amp; amount</p>
+            </button>
+          </div>
+
+          <!-- Panel 1: Karigar-Wise Full History -->
+          <div id="report-panel-karigar" class="space-y-5 pt-2">
+            <div class="no-print grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label for="kr-karigar-select" class="block text-xs font-bold text-slate-700 mb-1">Select Karigar</label>
+                <select id="kr-karigar-select" onchange="renderKarigarFullHistoryReport()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold"></select>
+              </div>
+              <div>
+                <label for="kr-from-date" class="block text-xs font-bold text-slate-700 mb-1">From Date</label>
+                <input id="kr-from-date" type="date" onchange="renderKarigarFullHistoryReport()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium" />
+              </div>
+              <div>
+                <label for="kr-to-date" class="block text-xs font-bold text-slate-700 mb-1">To Date</label>
+                <input id="kr-to-date" type="date" onchange="renderKarigarFullHistoryReport()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium" />
+              </div>
+            </div>
+            <div id="kr-history-report-body" class="space-y-6"></div>
+          </div>
+
+          <!-- Panel 2: Work in Progress -->
+          <div id="report-panel-wip" class="hidden space-y-5 pt-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label for="wip-process-select" class="block text-xs font-bold text-slate-700 mb-1">Process Filter</label>
+                <select id="wip-process-select" onchange="renderWipStageReport()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold"></select>
+              </div>
+              <div>
+                <label for="wip-from-date" class="block text-xs font-bold text-slate-700 mb-1">From Date</label>
+                <input id="wip-from-date" type="date" onchange="renderWipStageReport()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium" />
+              </div>
+              <div>
+                <label for="wip-to-date" class="block text-xs font-bold text-slate-700 mb-1">To Date</label>
+                <input id="wip-to-date" type="date" onchange="renderWipStageReport()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium" />
+              </div>
+              <div>
+                <label for="wip-po-select" class="block text-xs font-bold text-slate-700 mb-1">PO Filter</label>
+                <select id="wip-po-select" onchange="renderWipStageReport()" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold"></select>
+              </div>
+            </div>
+            <div id="wip-stage-report-body" class="space-y-4"></div>
+          </div>
+
+          <!-- Panel 3: Dispatch Summary -->
+          <div id="report-panel-dispatch" class="hidden space-y-4 pt-2">
+            <div id="dispatch-report-body" class="space-y-3"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Half-A4 Job Card Preview & Print Modal -->
+  <div id="job-card-pdf-modal" role="dialog" aria-modal="true" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-[1px] overflow-y-auto p-4 sm:p-6">
+    <div id="job-card-pdf-sheet" class="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-2xl p-5 sm:p-8 space-y-5">
+      <div class="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Half-A4 Job Card Preview</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="printCurrentJobCardPdf()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm">
+            Save / Print PDF
+          </button>
+          <button type="button" onclick="shareCurrentJobCardWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm">
+            Share (WhatsApp)
+          </button>
+          <button type="button" onclick="closeJobCardPdfModal()" class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold">
+            Close
+          </button>
+        </div>
+      </div>
+      <div id="job-card-pdf-content" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <!-- Karigar Report PDF Preview Modal -->
+  <div id="karigar-report-pdf-modal" role="dialog" aria-modal="true" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-[1px] overflow-y-auto p-4 sm:p-6">
+    <div id="karigar-report-pdf-sheet" class="max-w-4xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-2xl p-5 sm:p-8 space-y-6">
+      <div class="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Karigar Full History PDF Preview</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="printKarigarReportDirect()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm">
+            Save / Print PDF
+          </button>
+          <button type="button" onclick="shareKarigarReportWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm">
+            Share (WhatsApp)
+          </button>
+          <button type="button" onclick="closeKarigarReportPdfModal()" class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold">
+            Close
+          </button>
+        </div>
+      </div>
+      <div id="karigar-report-pdf-content" class="space-y-5"></div>
+    </div>
+  </div>
+
+  <!-- Dispatch Bill / Challan PDF Preview Modal -->
+  <div id="dispatch-doc-pdf-modal" role="dialog" aria-modal="true" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-[1px] overflow-y-auto p-4 sm:p-6">
+    <div id="dispatch-doc-pdf-sheet" class="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-2xl p-5 sm:p-8 space-y-6">
+      <div class="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Dispatch Bill / Challan Preview</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="printCurrentDispatchDoc()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm">
+            Save / Print PDF
+          </button>
+          <button type="button" onclick="shareCurrentDispatchWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm">
+            Share (WhatsApp)
+          </button>
+          <button type="button" onclick="closeDispatchDocPdfModal()" class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold">
+            Close
+          </button>
+        </div>
+      </div>
+      <div id="dispatch-doc-pdf-content" class="space-y-5"></div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'foot_anggle_mfg_solution_v3';
+    const CUSTOM_RESET_KEY = 'foot_anggle_mfg_custom_reset_v3';
+    const PROCESSES = ['Cutting', 'Socks Making', 'Fitter', 'Bottom', 'Pasting', 'Finishing'];
+    const SIZES = ['5', '6', '7', '8', '9', '10', '11', '12'];
+    const STAGE_PREREQUISITE = {
+      'Cutting': null,
+      'Socks Making': 'Cutting',
+      'Fitter': 'Cutting',
+      'Bottom': 'Fitter',
+      'Pasting': 'Bottom',
+      'Finishing': 'Pasting'
+    };
+
+    function createSizeObj(defaultVal = 0) {
+      const obj = {};
+      SIZES.forEach((sz) => { obj[sz] = defaultVal; });
+      return obj;
+    }
+
+    function sumSizeObj(sizeObj) {
+      if (!sizeObj) return 0;
+      return SIZES.reduce((sum, sz) => sum + (Number(sizeObj[sz]) || 0), 0);
+    }
+
+    function getDefaultAppState() {
+      const today = new Date().toISOString().slice(0, 10);
+      return {
+        activeTab: 'masters',
+        activeReportView: 'karigar',
+        activeJobCardProcess: 'Cutting',
+        editingPoId: null,
+        nextJobCardSeq: 1,
+        articles: [
+          { id: 'ART-1', code: 'FA-101' },
+          { id: 'ART-2', code: 'FA-202' }
+        ],
+        parties: [
+          { id: 'PTY-1', name: 'Royal Shoes', gst: '09AABCR1234F1Z2', address: 'Shop 14, MG Road, Agra, UP' }
+        ],
+        karigars: [
+          { id: 'KAR-1', name: 'Ashish', phone: '9876543210', process: 'Cutting', advanceBalance: 1000 },
+          { id: 'KAR-2', name: 'Wahid', phone: '9876543211', process: 'Fitter', advanceBalance: 0 },
+          { id: 'KAR-3', name: 'Guddu Bhai', phone: '9876543212', process: 'Bottom', advanceBalance: 500 },
+          { id: 'KAR-4', name: 'Ismail Bhai', phone: '9876543213', process: 'Pasting', advanceBalance: 0 },
+          { id: 'KAR-5', name: 'Ramesh', phone: '9876543214', process: 'Finishing', advanceBalance: 0 }
+        ],
+        karigarArticleRates: [
+          { id: 'RT-1', articleId: 'ART-1', karigarId: 'KAR-1', process: 'Cutting', rate: 10 }
+        ],
+        purchaseOrders: [
+          {
+            id: 'PO-1',
+            poNumber: 'PO-101',
+            partyName: 'Royal Shoes',
+            articleId: 'ART-1',
+            colour: 'Black',
+            orderDate: today,
+            deliveryDate: today,
+            leather: 'Nappa Black',
+            lining: 'Goat Lining',
+            sole: 'TPR Double Density',
+            specialRequirement: 'Standard Box Packing',
+            sizes: { '5': 0, '6': 10, '7': 15, '8': 20, '9': 15, '10': 10, '11': 0, '12': 0 }
+          }
+        ],
+        jobCards: [],
+        workDoneLogs: [],
+        advanceLogs: [
+          { id: 'ADV-INIT-1', karigarId: 'KAR-1', karigarName: 'Ashish', process: 'Cutting', date: today, amount: 1000, type: 'Opening Advance' },
+          { id: 'ADV-INIT-2', karigarId: 'KAR-3', karigarName: 'Guddu Bhai', process: 'Bottom', date: today, amount: 500, type: 'Opening Advance' }
+        ],
+        payoutSettlements: [],
+        dispatches: []
+      };
+    }
+
+    function getCustomResetState() {
+      try {
+        const raw = localStorage.getItem(CUSTOM_RESET_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function loadAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const fallback = getCustomResetState() || getDefaultAppState();
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return {
+          ...fallback,
+          ...parsed,
+          activeReportView: ['karigar', 'wip', 'dispatch'].includes(parsed.activeReportView) ? parsed.activeReportView : 'karigar',
+          activeJobCardProcess: PROCESSES.includes(parsed.activeJobCardProcess) ? parsed.activeJobCardProcess : 'Cutting',
+          articles: Array.isArray(parsed.articles) ? parsed.articles : fallback.articles,
+          parties: Array.isArray(parsed.parties) ? parsed.parties : fallback.parties,
+          karigars: Array.isArray(parsed.karigars) ? parsed.karigars : fallback.karigars,
+          karigarArticleRates: Array.isArray(parsed.karigarArticleRates) ? parsed.karigarArticleRates : [],
+          purchaseOrders: Array.isArray(parsed.purchaseOrders) ? parsed.purchaseOrders : [],
+          jobCards: Array.isArray(parsed.jobCards) ? parsed.jobCards : [],
+          workDoneLogs: Array.isArray(parsed.workDoneLogs) ? parsed.workDoneLogs : [],
+          advanceLogs: Array.isArray(parsed.advanceLogs) ? parsed.advanceLogs : [],
+          payoutSettlements: Array.isArray(parsed.payoutSettlements) ? parsed.payoutSettlements : [],
+          dispatches: Array.isArray(parsed.dispatches) ? parsed.dispatches : []
+        };
+      } catch (e) {
+        return getCustomResetState() || getDefaultAppState();
+      }
+    }
+
+    let appState = loadAppState();
+    let activePdfJobCardId = null;
+    let activePdfDispatchId = null;
+    let toastTimer = null;
+
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        localStorage.setItem(CUSTOM_RESET_KEY, JSON.stringify(appState));
+      } catch (e) {}
+    }
+
+    function showToast(message, type = 'success') {
+      const el = document.getElementById('toast-banner');
+      if (!el) return;
+      el.textContent = message;
+      el.className =
+        'no-print fixed top-4 right-4 z-50 max-w-sm rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold shadow-lg border transition-all ' +
+        (type === 'error'
+          ? 'bg-rose-50 border-rose-200 text-rose-800'
+          : 'bg-emerald-50 border-emerald-200 text-emerald-800');
+      el.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
+    }
+
+    function switchTab(tabName) {
+      appState.activeTab = tabName;
+      saveAppState();
+      ['masters', 'po', 'production', 'dispatch', 'payout', 'report'].forEach((t) => {
+        const panel = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const active = t === tabName;
+        if (panel) panel.classList.toggle('hidden', !active);
+        if (btn) {
+          btn.className = active
+            ? 'shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-brand-600 text-white shadow-sm shadow-brand-600/20 transition-all'
+            : 'shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/90 transition-all';
+        }
+      });
+      const kpiGrid = document.getElementById('kpi-grid');
+      if (kpiGrid) kpiGrid.classList.toggle('hidden', tabName !== 'masters');
+      if (tabName === 'report') selectReportView(appState.activeReportView || 'karigar');
+    }
+
+    function renderKpiGrid() {
+      const grid = document.getElementById('kpi-grid');
+      if (!grid) return;
+      const totalPoPairs = appState.purchaseOrders.reduce((s, p) => s + sumSizeObj(p.sizes), 0);
+      const finishedPairs = appState.workDoneLogs
+        .filter((w) => w.process === 'Finishing')
+        .reduce((s, w) => s + sumSizeObj(w.sizes), 0);
+      const totalAdvance = appState.karigars.reduce((s, k) => s + (Number(k.advanceBalance) || 0), 0);
+
+      grid.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-sm transition-shadow">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Articles &amp; Karigars</span>
+          <p class="text-xl sm:text-2xl font-extrabold font-mono text-slate-900 mt-1.5">${appState.articles.length} / ${appState.karigars.length}</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-sm transition-shadow">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">PO Order Volume</span>
+          <p class="text-xl sm:text-2xl font-extrabold font-mono text-brand-700 mt-1.5">${totalPoPairs.toLocaleString()} <span class="text-xs font-sans font-bold">Pairs</span></p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-sm transition-shadow">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Finished Pairs</span>
+          <p class="text-xl sm:text-2xl font-extrabold font-mono text-emerald-700 mt-1.5">${finishedPairs.toLocaleString()} <span class="text-xs font-sans font-bold">Pairs</span></p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-sm transition-shadow">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Advance Balance</span>
+          <p class="text-xl sm:text-2xl font-extrabold font-mono text-indigo-700 mt-1.5">₹${totalAdvance.toLocaleString()}</p>
+        </div>
+      `;
+    }
+
+    // MASTERS
+    function populateKarigarProcessDropdown() {
+      const sel = document.getElementById('karigar-process-dropdown');
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = PROCESSES.map((p) => `<option value="${p}">${p}</option>`).join('');
+      if (PROCESSES.includes(prev)) sel.value = prev;
+    }
+
+    function handleArticleMasterSubmit(e) {
+      e.preventDefault();
+      const code = (document.getElementById('master-article-code')?.value || '').trim();
+      if (!code) return;
+      const existing = appState.articles.find((a) => a.code.toLowerCase() === code.toLowerCase());
+      if (existing) {
+        existing.code = code;
+        showToast(`Updated ${code}.`);
+      } else {
+        appState.articles.push({ id: `ART-${Date.now()}`, code });
+        showToast(`Added ${code}.`);
+      }
+      document.getElementById('master-article-code').value = '';
+      saveAppState();
+      renderEverything();
+    }
+
+    function deleteArticleMaster(id) {
+      appState.articles = appState.articles.filter((a) => a.id !== id);
+      saveAppState();
+      renderEverything();
+      showToast('Article deleted.');
+    }
+
+    function renderArticlesAndRatesTable() {
+      const c = document.getElementById('articles-rates-table');
+      if (!c) return;
+      if (appState.articles.length === 0) {
+        c.innerHTML = `<p class="text-xs text-slate-400 p-3 text-center">No articles added yet.</p>`;
+        return;
+      }
+      c.innerHTML = appState.articles
+        .map(
+          (a) => `
+          <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs sm:text-sm">
+            <div>
+              <span class="font-extrabold text-slate-900">${a.code}</span>
+            </div>
+            <button type="button" onclick="deleteArticleMaster('${a.id}')" class="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100">Delete</button>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function handleKarigarMasterSubmit(e) {
+      e.preventDefault();
+      const name = (document.getElementById('karigar-name-input')?.value || '').trim();
+      const phone = (document.getElementById('karigar-phone-input')?.value || '').trim();
+      const process = document.getElementById('karigar-process-dropdown')?.value;
+      if (!name || !process) return;
+      appState.karigars.push({ id: `KAR-${Date.now()}`, name, phone, process, advanceBalance: 0 });
+      document.getElementById('karigar-master-form').reset();
+      populateKarigarProcessDropdown();
+      saveAppState();
+      renderEverything();
+      showToast(`Added ${name} (${process}).`);
+    }
+
+    function deleteKarigar(id) {
+      appState.karigars = appState.karigars.filter((k) => k.id !== id);
+      saveAppState();
+      renderEverything();
+      showToast('Karigar deleted.');
+    }
+
+    function renderKarigarsMasterList() {
+      const c = document.getElementById('karigars-master-list');
+      if (!c) return;
+      if (appState.karigars.length === 0) {
+        c.innerHTML = `<p class="text-xs text-slate-400 py-4 text-center">No karigars added yet.</p>`;
+        return;
+      }
+      c.innerHTML = appState.karigars
+        .map(
+          (k) => `
+          <div class="flex items-center justify-between rounded-xl border border-slate-200 px-3.5 py-2.5 bg-slate-50/60 text-xs sm:text-sm">
+            <div>
+              <span class="font-extrabold text-slate-900">${k.name}</span>
+              <span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900">${k.process}</span>
+              ${k.phone ? `<span class="ml-2 text-xs text-slate-500">${k.phone}</span>` : ''}
+            </div>
+            <button type="button" onclick="deleteKarigar('${k.id}')" class="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100">Delete</button>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function handlePartySubmit(e) {
+      e.preventDefault();
+      const name = (document.getElementById('party-name-input')?.value || '').trim();
+      const gst = (document.getElementById('party-gst-input')?.value || '').trim().toUpperCase();
+      const address = (document.getElementById('party-address-input')?.value || '').trim();
+      if (!name || !address) return;
+      const existing = appState.parties.find((p) => p.name.toLowerCase() === name.toLowerCase());
+      if (existing) {
+        existing.gst = gst;
+        existing.address = address;
+        showToast(`Updated ${existing.name}.`);
+      } else {
+        appState.parties.push({ id: `PTY-${Date.now()}`, name, gst, address });
+        showToast(`Added party ${name}.`);
+      }
+      document.getElementById('party-master-form').reset();
+      saveAppState();
+      renderEverything();
+    }
+
+    function deleteParty(id) {
+      appState.parties = appState.parties.filter((p) => p.id !== id);
+      saveAppState();
+      renderEverything();
+      showToast('Party deleted.');
+    }
+
+    function renderPartiesMasterList() {
+      const c = document.getElementById('parties-master-list');
+      const dl1 = document.getElementById('disp-party-datalist');
+      const dl2 = document.getElementById('po-party-datalist');
+      const opts = appState.parties.map((p) => `<option value="${p.name}"></option>`).join('');
+      if (dl1) dl1.innerHTML = opts;
+      if (dl2) dl2.innerHTML = opts;
+
+      if (!c) return;
+      if (appState.parties.length === 0) {
+        c.innerHTML = `<p class="text-xs text-slate-400 py-3 text-center">No parties added yet.</p>`;
+        return;
+      }
+      c.innerHTML = appState.parties
+        .map(
+          (p) => `
+          <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 px-3.5 py-2.5 bg-slate-50/60 text-xs sm:text-sm">
+            <div>
+              <span class="font-extrabold text-slate-900">${p.name}</span>
+              ${p.gst ? `<span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-900">GST: ${p.gst}</span>` : ''}
+              <p class="text-xs text-slate-600 mt-0.5">${p.address}</p>
+            </div>
+            <button type="button" onclick="deleteParty('${p.id}')" class="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100">Delete</button>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    // PO REGISTRATION
+    function populatePoArticleDropdown(selectedId = '') {
+      const sel = document.getElementById('po-article-dropdown');
+      if (!sel) return;
+      if (appState.articles.length === 0) {
+        sel.innerHTML = `<option value="">Add article in Masters first</option>`;
+        return;
+      }
+      sel.innerHTML = appState.articles.map((a) => `<option value="${a.id}">${a.code}</option>`).join('');
+      if (selectedId && appState.articles.some((a) => a.id === selectedId)) sel.value = selectedId;
+    }
+
+    function renderPoSizeInputs(vals = createSizeObj(0)) {
+      const grid = document.getElementById('po-size-grid');
+      if (!grid) return;
+      grid.innerHTML = SIZES.map(
+        (sz) => `
+        <div class="rounded-lg bg-white border border-slate-200 px-1.5 py-1.5 text-center">
+          <label for="po-sz-${sz}" class="block text-[11px] font-bold text-slate-600 mb-0.5">Sz ${sz}</label>
+          <input id="po-sz-${sz}" type="number" min="0" step="1" value="${Number(vals[sz]) || 0}" oninput="updatePoFormTotal()" class="w-full rounded border border-slate-300 px-1 py-0.5 text-center text-xs font-extrabold" />
+        </div>
+      `
+      ).join('');
+      updatePoFormTotal();
+    }
+
+    function updatePoFormTotal() {
+      let total = 0;
+      SIZES.forEach((sz) => { total += Math.max(0, parseInt(document.getElementById(`po-sz-${sz}`)?.value, 10) || 0); });
+      const pill = document.getElementById('po-total-pairs-pill');
+      if (pill) pill.textContent = `Total: ${total} Pairs`;
+    }
+
+    function handlePoSubmit(e) {
+      e.preventDefault();
+      const editingId = document.getElementById('po-editing-id')?.value || '';
+      const poNumber = (document.getElementById('po-number-input')?.value || '').trim();
+      const partyName = (document.getElementById('po-party-input')?.value || '').trim();
+      const articleId = document.getElementById('po-article-dropdown')?.value || '';
+      const colour = (document.getElementById('po-colour-input')?.value || '').trim();
+      const orderDate = document.getElementById('po-order-date')?.value || '';
+      const deliveryDate = document.getElementById('po-delivery-date')?.value || '';
+      const leather = (document.getElementById('po-leather-input')?.value || '').trim();
+      const lining = (document.getElementById('po-lining-input')?.value || '').trim();
+      const sole = (document.getElementById('po-sole-input')?.value || '').trim();
+      const specialRequirement = (document.getElementById('po-special-req-input')?.value || '').trim();
+      if (!poNumber || !partyName || !articleId || !orderDate || !deliveryDate) return;
+
+      const sizes = createSizeObj(0);
+      SIZES.forEach((sz) => { sizes[sz] = Math.max(0, parseInt(document.getElementById(`po-sz-${sz}`)?.value, 10) || 0); });
+      if (sumSizeObj(sizes) <= 0) {
+        showToast('Enter quantity > 0 for at least one size.', 'error');
+        return;
+      }
+
+      if (editingId) {
+        const po = appState.purchaseOrders.find((p) => p.id === editingId);
+        if (po) Object.assign(po, { poNumber, partyName, articleId, colour, orderDate, deliveryDate, leather, lining, sole, specialRequirement, sizes });
+        showToast(`Updated ${poNumber}.`);
+      } else {
+        appState.purchaseOrders.unshift({
+          id: `PO-${Date.now()}`, poNumber, partyName, articleId, colour, orderDate, deliveryDate, leather, lining, sole, specialRequirement, sizes
+        });
+        showToast(`Saved ${poNumber}.`);
+      }
+
+      cancelPoEdit();
+      saveAppState();
+      renderEverything();
+    }
+
+    function startEditPo(poId) {
+      const po = appState.purchaseOrders.find((p) => p.id === poId);
+      if (!po) return;
+      appState.editingPoId = po.id;
+      document.getElementById('po-editing-id').value = po.id;
+      document.getElementById('po-form-heading').textContent = `Edit PO (${po.poNumber})`;
+      document.getElementById('po-save-btn').textContent = 'Update Purchase Order';
+      document.getElementById('po-cancel-btn').classList.remove('hidden');
+      document.getElementById('po-number-input').value = po.poNumber;
+      document.getElementById('po-party-input').value = po.partyName || '';
+      populatePoArticleDropdown(po.articleId);
+      document.getElementById('po-colour-input').value = po.colour || '';
+      document.getElementById('po-order-date').value = po.orderDate || '';
+      document.getElementById('po-delivery-date').value = po.deliveryDate || '';
+      document.getElementById('po-leather-input').value = po.leather || '';
+      document.getElementById('po-lining-input').value = po.lining || '';
+      document.getElementById('po-sole-input').value = po.sole || '';
+      document.getElementById('po-special-req-input').value = po.specialRequirement || '';
+      renderPoSizeInputs(po.sizes);
+      switchTab('po');
+    }
+
+    function cancelPoEdit() {
+      appState.editingPoId = null;
+      document.getElementById('po-editing-id').value = '';
+      document.getElementById('po-form-heading').textContent = 'Create Purchase Order';
+      document.getElementById('po-save-btn').textContent = 'Save Purchase Order';
+      document.getElementById('po-cancel-btn').classList.add('hidden');
+      document.getElementById('po-registration-form').reset();
+      populatePoArticleDropdown();
+      renderPoSizeInputs(createSizeObj(0));
+    }
+
+    function deletePo(id) {
+      appState.purchaseOrders = appState.purchaseOrders.filter((p) => p.id !== id);
+      if (appState.editingPoId === id) cancelPoEdit();
+      saveAppState();
+      renderEverything();
+      showToast('PO deleted.');
+    }
+
+    function renderSavedPosList() {
+      const c = document.getElementById('saved-pos-container');
+      const cnt = document.getElementById('po-list-count');
+      if (cnt) cnt.textContent = `${appState.purchaseOrders.length} POs`;
+      if (!c) return;
+      if (appState.purchaseOrders.length === 0) {
+        c.innerHTML = `<p class="text-xs text-slate-400 py-6 text-center">No Purchase Orders registered yet.</p>`;
+        return;
+      }
+      c.innerHTML = appState.purchaseOrders
+        .map((po) => {
+          const art = appState.articles.find((a) => a.id === po.articleId);
+          const total = sumSizeObj(po.sizes);
+          const activeSizes = SIZES.filter((sz) => (Number(po.sizes?.[sz]) || 0) > 0);
+          return `
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 space-y-2.5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-extrabold text-slate-900">${po.poNumber}</span>
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-800">${po.partyName}</span>
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">${art?.code || 'Article'}</span>
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">${total} Pairs</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="startEditPo('${po.id}')" class="px-3 py-1 rounded-xl border border-slate-300 bg-white text-xs font-bold">Edit</button>
+                  <button type="button" onclick="deletePo('${po.id}')" class="px-3 py-1 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold">Delete</button>
+                </div>
+              </div>
+              <div class="text-xs text-slate-600 flex flex-wrap gap-3">
+                ${po.colour ? `<span>Colour: <strong>${po.colour}</strong></span>` : ''}
+                ${po.leather ? `<span>Leather: <strong>${po.leather}</strong></span>` : ''}
+                ${po.lining ? `<span>Lining: <strong>${po.lining}</strong></span>` : ''}
+                ${po.sole ? `<span>Sole: <strong>${po.sole}</strong></span>` : ''}
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                ${activeSizes.map((sz) => `<span class="rounded-lg border border-slate-200 bg-white px-2 py-0.5 text-[11px]">Sz ${sz}: <strong>${po.sizes[sz]}</strong></span>`).join('')}
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    // PRODUCTION & SEQUENTIAL GATES
+    function getCompletedPairsForPoStage(poId, stage) {
+      const done = createSizeObj(0);
+      const cardIds = new Set(appState.jobCards.filter((j) => j.poId === poId && j.process === stage).map((j) => j.id));
+      appState.workDoneLogs.forEach((w) => {
+        if (!cardIds.has(w.jobCardId)) return;
+        SIZES.forEach((sz) => { done[sz] += Number(w.sizes?.[sz]) || 0; });
+      });
+      return done;
+    }
+
+    function getIssuedPairsForPoStage(poId, stage) {
+      const issued = createSizeObj(0);
+      appState.jobCards
+        .filter((j) => j.poId === poId && j.process === stage)
+        .forEach((j) => { SIZES.forEach((sz) => { issued[sz] += Number(j.sizes?.[sz]) || 0; }); });
+      return issued;
+    }
+
+    function getAvailableBatchSizesForJobCard(poId, stage) {
+      const po = appState.purchaseOrders.find((p) => p.id === poId);
+      const avail = createSizeObj(0);
+      if (!po) return { sizes: avail, unlocked: false, reason: 'Select a Purchase Order.' };
+
+      const prereq = STAGE_PREREQUISITE[stage];
+      const issued = getIssuedPairsForPoStage(poId, stage);
+
+      if (!prereq) {
+        SIZES.forEach((sz) => {
+          avail[sz] = Math.max(0, (Number(po.sizes?.[sz]) || 0) - issued[sz]);
+        });
+        return { sizes: avail, unlocked: sumSizeObj(avail) > 0, reason: 'Cutting is unlocked from PO size quantities.' };
+      }
+
+      if (prereq === 'Cutting') {
+        const cuttingCards = appState.jobCards.filter((j) => j.poId === poId && j.process === 'Cutting');
+        const readyPart = createSizeObj(0);
+        cuttingCards.forEach((jc) => {
+          const chk = jc.cuttingChecklist || {};
+          const partOk = stage === 'Socks Making' ? Boolean(chk.socksCuttingOk) : Boolean(chk.cuttingOk);
+          if (!partOk) return;
+          const logged = sumSizeObj(getCompletedOnJobCardPerSize(jc.id));
+          SIZES.forEach((sz) => {
+            const cardQty = Number(jc.sizes?.[sz]) || 0;
+            readyPart[sz] += logged > 0 ? Math.min(cardQty, getCompletedOnJobCardPerSize(jc.id)[sz] || 0) : cardQty;
+          });
+        });
+        SIZES.forEach((sz) => {
+          avail[sz] = Math.max(0, Math.min(Number(po.sizes?.[sz]) || 0, readyPart[sz]) - issued[sz]);
+        });
+        const totalAvail = sumSizeObj(avail);
+        return {
+          sizes: avail,
+          unlocked: totalAvail > 0,
+          reason: totalAvail > 0
+            ? `${stage}: ${totalAvail} pairs eligible from approved Cutting cards.`
+            : `${stage} locked/empty: Complete ${stage === 'Socks Making' ? 'Socks Cutting OK' : 'Cutting OK'} in Cutting Work-Done first.`
+        };
+      }
+
+      const prevDone = getCompletedPairsForPoStage(poId, prereq);
+      SIZES.forEach((sz) => {
+        avail[sz] = Math.max(0, Math.min(Number(po.sizes?.[sz]) || 0, prevDone[sz]) - issued[sz]);
+      });
+      const totalAvail = sumSizeObj(avail);
+      return {
+        sizes: avail,
+        unlocked: totalAvail > 0,
+        reason: totalAvail > 0 ? `${stage}: ${totalAvail} pairs available from completed ${prereq}.` : `${stage}: Log completed ${prereq} pairs first.`
+      };
+    }
+
+    function populateJobCardDropdowns() {
+      const poSel = document.getElementById('jc-po-dropdown');
+      const stSel = document.getElementById('jc-stage-dropdown');
+      if (poSel) {
+        const prev = poSel.value;
+        poSel.innerHTML = appState.purchaseOrders.length
+          ? appState.purchaseOrders.map((p) => `<option value="${p.id}">${p.poNumber} (${p.partyName})</option>`).join('')
+          : `<option value="">No POs</option>`;
+        if (appState.purchaseOrders.some((p) => p.id === prev)) poSel.value = prev;
+      }
+      if (stSel) {
+        const prev = stSel.value;
+        stSel.innerHTML = PROCESSES.map((p) => `<option value="${p}">${p}</option>`).join('');
+        if (PROCESSES.includes(prev)) stSel.value = prev;
+      }
+      refreshJobCardFormState();
+    }
+
+    function refreshJobCardFormState() {
+      const poId = document.getElementById('jc-po-dropdown')?.value || '';
+      const stage = document.getElementById('jc-stage-dropdown')?.value || 'Cutting';
+      const karSel = document.getElementById('jc-karigar-dropdown');
+      const banner = document.getElementById('jc-gate-banner');
+      const grid = document.getElementById('jc-size-inputs-grid');
+
+      if (karSel) {
+        const mapped = appState.karigars.filter((k) => k.process === stage);
+        karSel.innerHTML = mapped.length
+          ? mapped.map((k) => `<option value="${k.id}">${k.name} (${k.process})</option>`).join('')
+          : `<option value="">No Karigar mapped to ${stage}</option>`;
+      }
+
+      const gate = getAvailableBatchSizesForJobCard(poId, stage);
+      if (banner) {
+        banner.textContent = gate.reason;
+        banner.className =
+          'rounded-xl border px-3.5 py-2.5 text-xs font-semibold ' +
+          (gate.unlocked ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-amber-200 bg-amber-50 text-amber-900');
+      }
+
+      if (!grid) return;
+      const po = appState.purchaseOrders.find((p) => p.id === poId);
+      if (!po) {
+        grid.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-2">Create a PO first.</p>`;
+        updateJobCardFormTotal();
+        return;
+      }
+
+      const activeSizes = SIZES.filter((sz) => (Number(po.sizes?.[sz]) || 0) > 0);
+      grid.innerHTML = activeSizes
+        .map((sz) => {
+          const maxQty = gate.sizes[sz];
+          return `
+            <div class="rounded-lg border border-slate-200 bg-white px-1.5 py-1.5 text-center">
+              <label for="jc-sz-${sz}" class="block text-[11px] font-bold text-slate-700">Sz ${sz}</label>
+              <span class="block text-[10px] font-bold text-emerald-700 mb-0.5">Max: ${maxQty}</span>
+              <input id="jc-sz-${sz}" type="number" min="0" max="${maxQty}" step="1" value="${maxQty}" data-max="${maxQty}" ${maxQty <= 0 ? 'disabled' : ''} oninput="clampJcInput(this)" class="w-full rounded border border-slate-300 px-1 py-0.5 text-center text-xs font-extrabold" />
+            </div>
+          `;
+        })
+        .join('');
+      updateJobCardFormTotal();
+    }
+
+    function clampJcInput(el) {
+      const maxVal = parseInt(el.getAttribute('data-max'), 10) || 0;
+      let val = parseInt(el.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > maxVal) { val = maxVal; el.value = maxVal; }
+      updateJobCardFormTotal();
+    }
+
+    function updateJobCardFormTotal() {
+      let total = 0;
+      SIZES.forEach((sz) => { total += Math.max(0, parseInt(document.getElementById(`jc-sz-${sz}`)?.value, 10) || 0); });
+      const pill = document.getElementById('jc-total-pairs-pill');
+      if (pill) pill.textContent = `Total: ${total} Pairs`;
+    }
+
+    function handleJobCardSubmit(e) {
+      e.preventDefault();
+      const poId = document.getElementById('jc-po-dropdown')?.value || '';
+      const process = document.getElementById('jc-stage-dropdown')?.value || '';
+      const karigarId = document.getElementById('jc-karigar-dropdown')?.value || '';
+      if (!poId || !process || !karigarId) {
+        showToast('Select PO, Stage, and Karigar.', 'error');
+        return;
+      }
+      const gate = getAvailableBatchSizesForJobCard(poId, process);
+      const sizes = createSizeObj(0);
+      for (const sz of SIZES) {
+        const val = Math.max(0, parseInt(document.getElementById(`jc-sz-${sz}`)?.value, 10) || 0);
+        if (val > gate.sizes[sz]) {
+          showToast(`Size ${sz} exceeds max ${gate.sizes[sz]}.`, 'error');
+          return;
+        }
+        sizes[sz] = val;
+      }
+      if (sumSizeObj(sizes) <= 0) {
+        showToast('Enter at least 1 pair.', 'error');
+        return;
+      }
+      const seq = Number(appState.nextJobCardSeq) || (appState.jobCards.length + 1);
+      appState.nextJobCardSeq = seq + 1;
+      appState.jobCards.unshift({
+        id: `JC-${seq}`,
+        poId,
+        process,
+        karigarId,
+        issueDate: new Date().toISOString().slice(0, 10),
+        sizes,
+        cuttingChecklist: process === 'Cutting' ? { cuttingOk: false, socksCuttingOk: false } : null,
+        stageChecklist: { ok: false },
+        completed: false,
+        settled: false
+      });
+      appState.activeJobCardProcess = process;
+      saveAppState();
+      renderEverything();
+      showToast(`Created JC-${seq} for ${process}.`);
+    }
+
+    function getCompletedOnJobCardPerSize(jcId) {
+      const done = createSizeObj(0);
+      appState.workDoneLogs
+        .filter((w) => w.jobCardId === jcId)
+        .forEach((w) => { SIZES.forEach((sz) => { done[sz] += Number(w.sizes?.[sz]) || 0; }); });
+      return done;
+    }
+
+    function getBalancePairsForJobCard(jc) {
+      const done = getCompletedOnJobCardPerSize(jc.id);
+      const bal = createSizeObj(0);
+      SIZES.forEach((sz) => { bal[sz] = Math.max(0, (Number(jc.sizes?.[sz]) || 0) - (Number(done[sz]) || 0)); });
+      return bal;
+    }
+
+    function populateWorkDoneDropdown() {
+      const sel = document.getElementById('wd-jobcard-dropdown');
+      if (!sel) return;
+      const activeCards = appState.jobCards.filter((j) => !j.settled);
+      const prev = sel.value;
+      sel.innerHTML = activeCards.length
+        ? activeCards.map((j) => {
+            const po = appState.purchaseOrders.find((p) => p.id === j.poId);
+            const kar = appState.karigars.find((k) => k.id === j.karigarId);
+            return `<option value="${j.id}">${j.id} • ${j.process} • ${kar?.name || ''} (${po?.poNumber || ''})</option>`;
+          }).join('')
+        : `<option value="">No active Job Cards</option>`;
+      if (activeCards.some((j) => j.id === prev)) sel.value = prev;
+      refreshWorkDoneFormState();
+    }
+
+    function refreshWorkDoneFormState() {
+      const jcId = document.getElementById('wd-jobcard-dropdown')?.value || '';
+      const jc = appState.jobCards.find((j) => j.id === jcId);
+      const grid = document.getElementById('wd-size-inputs-grid');
+      const cutPanel = document.getElementById('wd-cutting-checklist-panel');
+      const stPanel = document.getElementById('wd-stage-checklist-panel');
+
+      if (!jc) {
+        if (cutPanel) cutPanel.classList.add('hidden');
+        if (stPanel) stPanel.classList.add('hidden');
+        if (grid) grid.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-2">Select a Job Card.</p>`;
+        updateWdTotal();
+        return;
+      }
+
+      if (cutPanel) cutPanel.classList.toggle('hidden', jc.process !== 'Cutting');
+      if (jc.process === 'Cutting') {
+        const c1 = document.getElementById('wd-checklist-cutting');
+        const c2 = document.getElementById('wd-checklist-socks-cutting');
+        if (c1) c1.checked = Boolean(jc.cuttingChecklist?.cuttingOk);
+        if (c2) c2.checked = Boolean(jc.cuttingChecklist?.socksCuttingOk);
+      }
+
+      if (stPanel) {
+        stPanel.classList.toggle('hidden', jc.process === 'Cutting');
+        const title = document.getElementById('wd-stage-checklist-title');
+        const desc = document.getElementById('wd-stage-checklist-desc');
+        const lbl = document.getElementById('wd-checklist-stage-label');
+        const chk = document.getElementById('wd-checklist-stage-ok');
+        if (title) title.textContent = `${jc.process} Quality Checklist`;
+        if (desc) desc.textContent = `Check ${jc.process} OK to mark stage inspection passed.`;
+        if (lbl) lbl.textContent = `${jc.process} OK`;
+        if (chk) chk.checked = Boolean(jc.stageChecklist?.ok);
+      }
+
+      const bal = getBalancePairsForJobCard(jc);
+      const activeSizes = SIZES.filter((sz) => (Number(jc.sizes?.[sz]) || 0) > 0);
+      if (grid) {
+        grid.innerHTML = activeSizes
+          .map((sz) => `
+            <div class="rounded-lg border border-slate-200 bg-white px-1.5 py-1.5 text-center">
+              <label for="wd-sz-${sz}" class="block text-[11px] font-bold text-slate-700">Sz ${sz}</label>
+              <span class="block text-[10px] font-bold text-emerald-700 mb-0.5">Left: ${bal[sz]}</span>
+              <input id="wd-sz-${sz}" type="number" min="0" max="${bal[sz]}" step="1" value="${bal[sz]}" data-max="${bal[sz]}" oninput="clampJcInput(this); updateWdTotal();" class="w-full rounded border border-slate-300 px-1 py-0.5 text-center text-xs font-extrabold" />
+            </div>
+          `)
+          .join('');
+      }
+      updateWdTotal();
+    }
+
+    function updateWdTotal() {
+      let total = 0;
+      SIZES.forEach((sz) => { total += Math.max(0, parseInt(document.getElementById(`wd-sz-${sz}`)?.value, 10) || 0); });
+      const pill = document.getElementById('wd-total-pairs-pill');
+      if (pill) pill.textContent = `Done: ${total} Pairs`;
+    }
+
+    function handleWorkDoneSubmit(e) {
+      e.preventDefault();
+      const jcId = document.getElementById('wd-jobcard-dropdown')?.value || '';
+      const jc = appState.jobCards.find((j) => j.id === jcId);
+      if (!jc) return;
+
+      const bal = getBalancePairsForJobCard(jc);
+      const sizes = createSizeObj(0);
+      for (const sz of SIZES) {
+        const val = Math.max(0, parseInt(document.getElementById(`wd-sz-${sz}`)?.value, 10) || 0);
+        if (val > bal[sz]) {
+          showToast(`Size ${sz} exceeds balance ${bal[sz]}.`, 'error');
+          return;
+        }
+        sizes[sz] = val;
+      }
+
+      const totalDone = sumSizeObj(sizes);
+      if (jc.process === 'Cutting') {
+        const cutOk = Boolean(document.getElementById('wd-checklist-cutting')?.checked);
+        const socksOk = Boolean(document.getElementById('wd-checklist-socks-cutting')?.checked);
+        jc.cuttingChecklist = { cuttingOk: cutOk, socksCuttingOk: socksOk };
+      } else {
+        const stOk = Boolean(document.getElementById('wd-checklist-stage-ok')?.checked);
+        jc.stageChecklist = { ok: stOk };
+      }
+
+      if (totalDone <= 0) {
+        showToast('Enter at least 1 completed pair.', 'error');
+        return;
+      }
+
+      const po = appState.purchaseOrders.find((p) => p.id === jc.poId);
+      const art = appState.articles.find((a) => a.id === po?.articleId);
+      const kar = appState.karigars.find((k) => k.id === jc.karigarId);
+
+      appState.workDoneLogs.unshift({
+        id: `WD-${Date.now()}`,
+        jobCardId: jc.id,
+        poId: jc.poId,
+        poNumber: po?.poNumber || '',
+        articleId: po?.articleId || '',
+        articleCode: art?.code || '',
+        karigarId: jc.karigarId,
+        karigarName: kar?.name || '',
+        process: jc.process,
+        date: new Date().toISOString().slice(0, 10),
+        sizes,
+        settledInPayoutId: null
+      });
+
+      const newBal = sumSizeObj(getBalancePairsForJobCard(jc));
+      if (newBal === 0) jc.completed = true;
+
+      saveAppState();
+      renderEverything();
+      showToast(`Logged ${totalDone} pairs on ${jc.id}.`);
+    }
+
+    function selectJobCardProcessTab(proc) {
+      appState.activeJobCardProcess = proc;
+      saveAppState();
+      renderActiveJobCardsList();
+    }
+
+    function renderActiveJobCardsList() {
+      const c = document.getElementById('active-jobcards-list');
+      const cnt = document.getElementById('active-jc-count');
+      const tabs = document.getElementById('jc-process-filter-tabs');
+      if (!c) return;
+
+      const activeCards = appState.jobCards.filter((j) => !j.settled);
+      const selectedProc = PROCESSES.includes(appState.activeJobCardProcess) ? appState.activeJobCardProcess : 'Cutting';
+
+      if (tabs) {
+        tabs.innerHTML = PROCESSES.map((p) => {
+          const n = activeCards.filter((j) => j.process === p).length;
+          const isAct = p === selectedProc;
+          return `
+            <button type="button" onclick="selectJobCardProcessTab('${p}')" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 ${
+              isAct ? 'bg-amber-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }">
+              <span>${p}</span>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] ${isAct ? 'bg-white/20 text-white' : 'bg-white text-slate-700'}">${n}</span>
+            </button>
+          `;
+        }).join('');
+      }
+
+      const list = activeCards.filter((j) => j.process === selectedProc);
+      if (cnt) cnt.textContent = `${list.length} ${selectedProc} Cards`;
+
+      if (list.length === 0) {
+        c.innerHTML = `<p class="col-span-full text-xs text-slate-400 py-6 text-center">No active Job Cards in ${selectedProc}.</p>`;
+        return;
+      }
+
+      c.innerHTML = list
+        .map((jc) => {
+          const po = appState.purchaseOrders.find((p) => p.id === jc.poId);
+          const art = appState.articles.find((a) => a.id === po?.articleId);
+          const kar = appState.karigars.find((k) => k.id === jc.karigarId);
+          const issued = sumSizeObj(jc.sizes);
+          const bal = sumSizeObj(getBalancePairsForJobCard(jc));
+          const done = Math.max(0, issued - bal);
+          return `
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs font-extrabold text-slate-900">${jc.id}</span>
+                  <span class="ml-1.5 text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">${jc.process}</span>
+                  <p class="text-xs font-semibold text-slate-700 mt-1">${po?.poNumber || ''} • ${art?.code || ''} • <strong>${kar?.name || ''}</strong></p>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="openJobCardPdfModal('${jc.id}')" class="px-2.5 py-1 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-[11px] font-bold">
+                    Half-A4 PDF
+                  </button>
+                  <button type="button" onclick="deleteJobCard('${jc.id}')" class="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs bg-white rounded-xl border border-slate-200 px-3 py-2">
+                <span>Issued: <strong>${issued}</strong></span>
+                <span>Done: <strong class="text-emerald-700">${done}</strong></span>
+                <span>Left: <strong class="text-amber-700">${bal}</strong></span>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function deleteJobCard(jcId) {
+      appState.jobCards = appState.jobCards.filter((j) => j.id !== jcId);
+      appState.workDoneLogs = appState.workDoneLogs.filter((w) => w.jobCardId !== jcId);
+      saveAppState();
+      renderEverything();
+      showToast(`Deleted ${jcId}.`);
+    }
+
+    function openHalfA4PreviewForCurrentSelection() {
+      const poId = document.getElementById('jc-po-dropdown')?.value || '';
+      const stage = document.getElementById('jc-stage-dropdown')?.value || 'Cutting';
+      const karId = document.getElementById('jc-karigar-dropdown')?.value || '';
+      const sizes = createSizeObj(0);
+      SIZES.forEach((sz) => { sizes[sz] = Math.max(0, parseInt(document.getElementById(`jc-sz-${sz}`)?.value, 10) || 0); });
+      const tempCard = {
+        id: 'PREVIEW-JC',
+        poId,
+        process: stage,
+        karigarId: karId,
+        issueDate: new Date().toISOString().slice(0, 10),
+        sizes
+      };
+      renderHalfA4JobCardModal(tempCard);
+    }
+
+    function openJobCardPdfModal(jcId) {
+      const jc = appState.jobCards.find((j) => j.id === jcId);
+      if (!jc) return;
+      renderHalfA4JobCardModal(jc);
+    }
+
+    function renderHalfA4JobCardModal(jc) {
+      activePdfJobCardId = jc.id;
+      const modal = document.getElementById('job-card-pdf-modal');
+      const content = document.getElementById('job-card-pdf-content');
+      if (!modal || !content) return;
+
+      const po = appState.purchaseOrders.find((p) => p.id === jc.poId);
+      const art = appState.articles.find((a) => a.id === po?.articleId);
+      const kar = appState.karigars.find((k) => k.id === jc.karigarId);
+      const total = sumSizeObj(jc.sizes);
+      const activeSizes = SIZES.filter((sz) => (Number(jc.sizes?.[sz]) || 0) > 0);
+
+      content.innerHTML = `
+        <div class="rounded-2xl border-2 border-slate-900 p-4 space-y-3 bg-white" style="min-height: 138mm; max-height: 148mm;">
+          <div class="flex items-center justify-between border-b border-slate-300 pb-2">
+            <div>
+              <h2 class="text-sm font-extrabold text-slate-900">FOOT ANGGLE MANUFACTURING SOLUTION — ${jc.process.toUpperCase()} JOB CARD</h2>
+              <p class="text-[11px] text-slate-600">JC No: <strong>${jc.id}</strong> • Date: <strong>${jc.issueDate || '-'}</strong> • PO: <strong>${po?.poNumber || '-'}</strong> • Party: <strong>${po?.partyName || '-'}</strong></p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-300 text-xs font-extrabold text-amber-950">${kar?.name || 'Karigar'}</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] bg-slate-50 rounded-xl p-2.5 border border-slate-200">
+            <div>Article: <strong>${art?.code || '-'}</strong> (${po?.colour || '-'})</div>
+            <div>Leather: <strong>${po?.leather || '-'}</strong></div>
+            <div>Lining: <strong>${po?.lining || '-'}</strong></div>
+            <div>Sole: <strong>${po?.sole || '-'}</strong></div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-[11px] border-collapse">
+              <thead>
+                <tr class="bg-slate-100">
+                  <th class="border border-slate-300 px-2 py-1 text-left">Size</th>
+                  ${activeSizes.map((sz) => `<th class="border border-slate-300 px-2 py-1 text-center">${sz}</th>`).join('')}
+                  <th class="border border-slate-300 px-2 py-1 text-center">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border border-slate-300 px-2 py-1 font-bold">Pairs</td>
+                  ${activeSizes.map((sz) => `<td class="border border-slate-300 px-2 py-1 text-center font-extrabold">${jc.sizes[sz]}</td>`).join('')}
+                  <td class="border border-slate-300 px-2 py-1 text-center font-extrabold">${total}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-600 pt-2">
+            <span>Special Note: <strong>${po?.specialRequirement || '-'}</strong></span>
+            <span>Karigar Sign: ___________________</span>
+          </div>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function closeJobCardPdfModal() {
+      activePdfJobCardId = null;
+      document.getElementById('job-card-pdf-modal')?.classList.add('hidden');
+      document.body.classList.remove('printing-job-card');
+    }
+
+    function printCurrentJobCardPdf() {
+      document.body.classList.add('printing-job-card');
+      window.print();
+      setTimeout(() => document.body.classList.remove('printing-job-card'), 300);
+    }
+
+    function shareCurrentJobCardWhatsApp() {
+      const jc = appState.jobCards.find((j) => j.id === activePdfJobCardId);
+      const po = jc ? appState.purchaseOrders.find((p) => p.id === jc.poId) : null;
+      const art = po ? appState.articles.find((a) => a.id === po.articleId) : null;
+      const kar = jc ? appState.karigars.find((k) => k.id === jc.karigarId) : null;
+      const msg = [
+        `*Foot Anggle — ${jc?.process || 'Job Card'}*`,
+        `JC: ${jc?.id || ''} | PO: ${po?.poNumber || ''} | Party: ${po?.partyName || ''}`,
+        `Article: ${art?.code || ''} | Karigar: ${kar?.name || ''}`,
+        `Total Pairs: ${jc ? sumSizeObj(jc.sizes) : 0}`
+      ].join('\n');
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+    }
+
+    // DISPATCH TAB
+    function populateDispatchDropdowns() {
+      const poSel = document.getElementById('disp-po-dropdown');
+      const artSel = document.getElementById('disp-article-dropdown');
+      const dateInp = document.getElementById('disp-date');
+      if (dateInp && !dateInp.value) dateInp.value = new Date().toISOString().slice(0, 10);
+
+      if (poSel) {
+        const prev = poSel.value;
+        poSel.innerHTML =
+          `<option value="">-- Select Reference PO --</option>` +
+          appState.purchaseOrders.map((p) => `<option value="${p.id}">${p.poNumber} • ${p.partyName}</option>`).join('');
+        if (Array.from(poSel.options).some((o) => o.value === prev)) poSel.value = prev;
+      }
+
+      if (artSel) {
+        const prev = artSel.value;
+        artSel.innerHTML = appState.articles.length
+          ? appState.articles.map((a) => `<option value="${a.code}">${a.code}</option>`).join('')
+          : `<option value="FA-101">FA-101</option>`;
+        if (Array.from(artSel.options).some((o) => o.value === prev)) artSel.value = prev;
+      }
+
+      syncDispatchDocNumberPrefix();
+      recalculateDispatchAmount();
+    }
+
+    function syncDispatchDocNumberPrefix() {
+      const docType = document.getElementById('disp-doc-type')?.value || 'Challan';
+      const numInp = document.getElementById('disp-doc-number');
+      if (!numInp) return;
+      const prefix = docType === 'Bill' ? 'BILL-' : 'CH-';
+      if (!numInp.value || numInp.value === 'CH-101' || numInp.value === 'BILL-101') {
+        numInp.value = docType === 'Bill' ? 'BILL-101' : 'CH-101';
+      } else if (docType === 'Bill' && numInp.value.startsWith('CH-')) {
+        numInp.value = numInp.value.replace(/^CH-/, prefix);
+      } else if (docType === 'Challan' && numInp.value.startsWith('BILL-')) {
+        numInp.value = numInp.value.replace(/^BILL-/, prefix);
+      }
+    }
+
+    function syncDispatchRateFromArticle() {
+      recalculateDispatchAmount();
+    }
+
+    function syncDispatchFromPoSelection() {
+      const poId = document.getElementById('disp-po-dropdown')?.value || '';
+      if (!poId) return;
+      const po = appState.purchaseOrders.find((p) => p.id === poId);
+      if (!po) return;
+
+      const partyInp = document.getElementById('disp-party-name');
+      const addrInp = document.getElementById('disp-party-address');
+      const artSel = document.getElementById('disp-article-dropdown');
+      const qtyInp = document.getElementById('disp-quantity-input');
+      const sumInp = document.getElementById('disp-article-summary');
+      const art = appState.articles.find((a) => a.id === po.articleId);
+      const party = appState.parties.find((pt) => pt.name.toLowerCase() === (po.partyName || '').toLowerCase());
+
+      if (partyInp && po.partyName) partyInp.value = po.partyName;
+      if (addrInp && party?.address) addrInp.value = party.address;
+      if (artSel && art?.code) artSel.value = art.code;
+      if (qtyInp) qtyInp.value = sumSizeObj(po.sizes) || 1;
+      if (sumInp) {
+        const parts = [];
+        if (po.colour) parts.push(`Colour: ${po.colour}`);
+        if (po.leather) parts.push(`Leather: ${po.leather}`);
+        if (po.lining) parts.push(`Lining: ${po.lining}`);
+        if (po.sole) parts.push(`Sole: ${po.sole}`);
+        sumInp.value = parts.join(' • ') || `${art?.code || 'Article'} Footwear Batch`;
+      }
+      recalculateDispatchAmount();
+    }
+
+    function syncDispatchFromPartyInput() {
+      const name = (document.getElementById('disp-party-name')?.value || '').trim().toLowerCase();
+      if (!name) return;
+      const party = appState.parties.find((p) => p.name.toLowerCase() === name);
+      const addrInp = document.getElementById('disp-party-address');
+      if (party && addrInp) addrInp.value = party.address || '';
+    }
+
+    function recalculateDispatchAmount() {
+      const qty = Math.max(0, parseFloat(document.getElementById('disp-quantity-input')?.value) || 0);
+      const rate = Math.max(0, parseFloat(document.getElementById('disp-rate-input')?.value) || 0);
+      const prev = document.getElementById('disp-total-amount-preview');
+      if (prev) prev.textContent = `₹${(qty * rate).toLocaleString()}`;
+    }
+
+    function handleDispatchSubmit(e) {
+      e.preventDefault();
+      const docType = document.getElementById('disp-doc-type')?.value || 'Challan';
+      const docNumber = (document.getElementById('disp-doc-number')?.value || '').trim();
+      const date = document.getElementById('disp-date')?.value || new Date().toISOString().slice(0, 10);
+      const poId = document.getElementById('disp-po-dropdown')?.value || '';
+      const po = appState.purchaseOrders.find((p) => p.id === poId);
+      const partyName = (document.getElementById('disp-party-name')?.value || '').trim();
+      const partyAddress = (document.getElementById('disp-party-address')?.value || '').trim();
+      const partyObj = appState.parties.find((p) => p.name.toLowerCase() === partyName.toLowerCase());
+      const articleNumber = (document.getElementById('disp-article-dropdown')?.value || '').trim();
+      const articleSummary = (document.getElementById('disp-article-summary')?.value || '').trim();
+      const quantity = Math.max(1, parseInt(document.getElementById('disp-quantity-input')?.value, 10) || 0);
+      const rate = Math.max(0, parseFloat(document.getElementById('disp-rate-input')?.value) || 0);
+      const amount = quantity * rate;
+
+      const record = {
+        id: `DISP-${Date.now()}`,
+        docType,
+        docNumber,
+        date,
+        poNumber: po?.poNumber || '',
+        partyName,
+        partyAddress,
+        partyGst: partyObj?.gst || '',
+        articleNumber,
+        articleSummary,
+        quantity,
+        rate,
+        amount
+      };
+
+      appState.dispatches.unshift(record);
+      saveAppState();
+      renderSavedDispatchesList();
+      openDispatchDocPdfModal(record.id);
+    }
+
+    function renderSavedDispatchesList() {
+      const c = document.getElementById('saved-dispatches-list');
+      if (!c) return;
+      if (appState.dispatches.length === 0) {
+        c.innerHTML = `<p class="text-xs text-slate-400 py-4 text-center">No dispatch Bills or Challans created yet.</p>`;
+        return;
+      }
+      c.innerHTML = appState.dispatches
+        .map(
+          (d) => `
+          <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs sm:text-sm">
+            <div>
+              <span class="font-extrabold text-slate-900">${d.docType}: ${d.docNumber}</span>
+              <span class="ml-2 text-xs text-slate-500">${d.date}</span>
+              <p class="text-xs text-slate-700 mt-0.5"><strong>${d.partyName}</strong> • ${d.articleNumber} (${d.quantity} pairs) • <strong class="text-emerald-700">₹${Number(d.amount || 0).toLocaleString()}</strong></p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="openDispatchDocPdfModal('${d.id}')" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold">
+                View PDF
+              </button>
+              <button type="button" onclick="deleteDispatchRecord('${d.id}')" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold">
+                Delete
+              </button>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function deleteDispatchRecord(dispId) {
+      appState.dispatches = appState.dispatches.filter((d) => d.id !== dispId);
+      saveAppState();
+      renderSavedDispatchesList();
+      showToast('Dispatch deleted.');
+    }
+
+    function openDispatchDocPdfModal(dispId) {
+      const d = appState.dispatches.find((x) => x.id === dispId);
+      if (!d) return;
+      activePdfDispatchId = d.id;
+      const modal = document.getElementById('dispatch-doc-pdf-modal');
+      const content = document.getElementById('dispatch-doc-pdf-content');
+      if (!modal || !content) return;
+
+      content.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-4 border-b-2 border-slate-900 pb-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900">FOOT ANGGLE MANUFACTURING SOLUTION</h2>
+            <p class="text-xs text-slate-600">${d.docType.toUpperCase()} No: <strong>${d.docNumber}</strong> • Date: <strong>${d.date}</strong> ${d.poNumber ? `• PO Ref: <strong>${d.poNumber}</strong>` : ''}</p>
+          </div>
+          <span class="px-3 py-1 rounded-xl bg-amber-100 border border-amber-300 text-xs font-extrabold text-amber-950">${d.docType}</span>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-xs space-y-1">
+          <div class="font-extrabold text-slate-900 text-sm">Party: ${d.partyName}</div>
+          <div class="text-slate-700">Address: <strong>${d.partyAddress || '-'}</strong></div>
+          ${d.partyGst ? `<div class="text-slate-700">GSTIN: <strong>${d.partyGst}</strong></div>` : ''}
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-800">
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-left font-extrabold">Article No.</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-left font-extrabold">Article Summary</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-right font-extrabold">Qty (Pairs)</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-right font-extrabold">Rate (₹)</th>
+                <th class="border-b border-slate-200 px-3 py-2 text-right font-extrabold">Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-white">
+                <td class="border-b border-r border-slate-200 px-3 py-2.5 font-extrabold">${d.articleNumber}</td>
+                <td class="border-b border-r border-slate-200 px-3 py-2.5">${d.articleSummary}</td>
+                <td class="border-b border-r border-slate-200 px-3 py-2.5 text-right font-bold">${d.quantity}</td>
+                <td class="border-b border-r border-slate-200 px-3 py-2.5 text-right">₹${Number(d.rate || 0).toLocaleString()}</td>
+                <td class="border-b border-slate-200 px-3 py-2.5 text-right font-extrabold text-emerald-700">₹${Number(d.amount || 0).toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function closeDispatchDocPdfModal() {
+      activePdfDispatchId = null;
+      document.getElementById('dispatch-doc-pdf-modal')?.classList.add('hidden');
+      document.body.classList.remove('printing-dispatch-doc');
+    }
+
+    function printCurrentDispatchDoc() {
+      document.body.classList.add('printing-dispatch-doc');
+      window.print();
+      setTimeout(() => document.body.classList.remove('printing-dispatch-doc'), 300);
+    }
+
+    function shareCurrentDispatchWhatsApp() {
+      const d = appState.dispatches.find((x) => x.id === activePdfDispatchId);
+      if (!d) return;
+      const lines = [
+        `*Foot Anggle — ${d.docType} (${d.docNumber})*`,
+        `Date: ${d.date}`,
+        `Party: *${d.partyName}*`,
+        `Address: ${d.partyAddress}`,
+        `Article: *${d.articleNumber}* — ${d.articleSummary}`,
+        `Qty: *${d.quantity} Pairs* | Amount: *₹${Number(d.amount || 0).toLocaleString()}*`
+      ];
+      window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+    }
+
+    // PAYOUT TAB
+    function getRateForArticleAndKarigar(articleId, karigarId, processName) {
+      const specific = appState.karigarArticleRates.find((r) => r.articleId === articleId && r.karigarId === karigarId);
+      return specific ? (Number(specific.rate) || 0) : 0;
+    }
+
+    function populateRateMasterDropdowns() {
+      const aSel = document.getElementById('rate-article-dropdown');
+      const kSel = document.getElementById('rate-karigar-dropdown');
+      if (aSel) aSel.innerHTML = appState.articles.map((a) => `<option value="${a.id}">${a.code}</option>`).join('');
+      if (kSel) kSel.innerHTML = appState.karigars.map((k) => `<option value="${k.id}">${k.name} (${k.process})</option>`).join('');
+      prefillRateInputFromSelection();
+    }
+
+    function prefillRateInputFromSelection() {
+      const aId = document.getElementById('rate-article-dropdown')?.value || '';
+      const kId = document.getElementById('rate-karigar-dropdown')?.value || '';
+      const inp = document.getElementById('rate-amount-input');
+      if (!inp) return;
+      const found = appState.karigarArticleRates.find((r) => r.articleId === aId && r.karigarId === kId);
+      inp.value = found ? found.rate : '';
+    }
+
+    function handleSaveKarigarArticleRate(e) {
+      e.preventDefault();
+      const articleId = document.getElementById('rate-article-dropdown')?.value || '';
+      const karigarId = document.getElementById('rate-karigar-dropdown')?.value || '';
+      const rate = parseFloat(document.getElementById('rate-amount-input')?.value);
+      if (!articleId || !karigarId || isNaN(rate) || rate < 0) return;
+      const kar = appState.karigars.find((k) => k.id === karigarId);
+      const ex = appState.karigarArticleRates.find((r) => r.articleId === articleId && r.karigarId === karigarId);
+      if (ex) ex.rate = rate;
+      else appState.karigarArticleRates.unshift({ id: `RT-${Date.now()}`, articleId, karigarId, process: kar?.process || '', rate });
+      saveAppState();
+      renderSavedKarigarRatesList();
+      renderPayoutCards();
+      showToast('Rate saved.');
+    }
+
+    function deleteKarigarArticleRate(id) {
+      appState.karigarArticleRates = appState.karigarArticleRates.filter((r) => r.id !== id);
+      saveAppState();
+      renderSavedKarigarRatesList();
+      renderPayoutCards();
+    }
+
+    function renderSavedKarigarRatesList() {
+      const c = document.getElementById('saved-karigar-rates-list');
+      const cnt = document.getElementById('rate-master-count');
+      if (cnt) cnt.textContent = `${appState.karigarArticleRates.length} Rates`;
+      if (!c) return;
+      c.innerHTML = appState.karigarArticleRates
+        .map((r) => {
+          const art = appState.articles.find((a) => a.id === r.articleId);
+          const kar = appState.karigars.find((k) => k.id === r.karigarId);
+          return `
+            <div class="flex items-center justify-between rounded-xl border border-amber-200 bg-white px-3 py-2 text-xs">
+              <div><strong>${art?.code || 'Art'}</strong> • ${kar?.name || 'Karigar'} — <strong class="text-emerald-700">₹${r.rate}/pair</strong></div>
+              <button type="button" onclick="deleteKarigarArticleRate('${r.id}')" class="text-rose-600 font-bold">×</button>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function populateAdvanceKarigarDropdown() {
+      const sel = document.getElementById('adv-karigar-dropdown');
+      const dt = document.getElementById('adv-date-input');
+      if (dt && !dt.value) dt.value = new Date().toISOString().slice(0, 10);
+      if (sel) sel.innerHTML = appState.karigars.map((k) => `<option value="${k.id}">${k.name} (${k.process})</option>`).join('');
+    }
+
+    function handleAddAdvance(e) {
+      e.preventDefault();
+      const kId = document.getElementById('adv-karigar-dropdown')?.value || '';
+      const date = document.getElementById('adv-date-input')?.value || new Date().toISOString().slice(0, 10);
+      const amount = Math.max(0, parseFloat(document.getElementById('adv-amount-input')?.value) || 0);
+      const kar = appState.karigars.find((k) => k.id === kId);
+      if (!kar || amount <= 0) return;
+      kar.advanceBalance = (Number(kar.advanceBalance) || 0) + amount;
+      appState.advanceLogs.unshift({ id: `ADV-${Date.now()}`, karigarId: kar.id, karigarName: kar.name, process: kar.process, date, amount, type: 'Advance Given' });
+      document.getElementById('adv-amount-input').value = '';
+      saveAppState();
+      renderEverything();
+      showToast(`Added ₹${amount} advance to ${kar.name}.`);
+    }
+
+    function calculateKarigarEarnedWages(karigarId) {
+      let pairs = 0;
+      let wages = 0;
+      const logIds = [];
+      appState.workDoneLogs.forEach((w) => {
+        if (w.settledInPayoutId || w.karigarId !== karigarId) return;
+        const p = sumSizeObj(w.sizes);
+        const r = getRateForArticleAndKarigar(w.articleId, karigarId, w.process);
+        pairs += p;
+        wages += p * r;
+        logIds.push(w.id);
+      });
+      return { pairs, wages, logIds };
+    }
+
+    function recalculateNetPayablePreview(karigarId, grossWages, advBal) {
+      const ded = Math.min(advBal, Math.max(0, parseFloat(document.getElementById(`adv-deduct-${karigarId}`)?.value) || 0));
+      const ext = Math.max(0, parseFloat(document.getElementById(`extra-adv-${karigarId}`)?.value) || 0);
+      const net = Math.max(0, grossWages - ded + ext);
+      const postAdv = Math.max(0, advBal - ded + ext);
+      const netEl = document.getElementById(`net-payable-${karigarId}`);
+      const advEl = document.getElementById(`post-adv-${karigarId}`);
+      if (netEl) netEl.textContent = `₹${net.toLocaleString()}`;
+      if (advEl) advEl.textContent = `New Adv: ₹${postAdv.toLocaleString()}`;
+    }
+
+    function settleKarigarPayout(karigarId) {
+      const kar = appState.karigars.find((k) => k.id === karigarId);
+      if (!kar) return;
+      const { pairs, wages, logIds } = calculateKarigarEarnedWages(karigarId);
+      const advBal = Number(kar.advanceBalance) || 0;
+      const ded = Math.min(advBal, Math.max(0, parseFloat(document.getElementById(`adv-deduct-${karigarId}`)?.value) || 0));
+      const ext = Math.max(0, parseFloat(document.getElementById(`extra-adv-${karigarId}`)?.value) || 0);
+      const netPaid = Math.max(0, wages - ded + ext);
+      if (wages <= 0 && ded <= 0 && ext <= 0) {
+        showToast('Nothing to settle for this karigar.', 'error');
+        return;
+      }
+      const date = document.getElementById('payout-settlement-date')?.value || new Date().toISOString().slice(0, 10);
+      const setId = `SET-${Date.now()}`;
+      appState.workDoneLogs.forEach((w) => { if (logIds.includes(w.id)) w.settledInPayoutId = setId; });
+      if (ext > 0) {
+        appState.advanceLogs.unshift({ id: `ADV-${Date.now()}`, karigarId: kar.id, karigarName: kar.name, process: kar.process, date, amount: ext, type: 'Extra Advance' });
+      }
+      kar.advanceBalance = Math.max(0, advBal - ded + ext);
+      appState.payoutSettlements.unshift({
+        id: setId, date, karigarId: kar.id, karigarName: kar.name, process: kar.process,
+        pairsSettled: pairs, grossWages: wages, advanceDeducted: ded, extraAdvanceGiven: ext, netPaid
+      });
+      saveAppState();
+      renderEverything();
+      showToast(`Settled ₹${netPaid.toLocaleString()} for ${kar.name}.`);
+    }
+
+    function renderPayoutCards() {
+      const c = document.getElementById('payout-karigar-cards');
+      const dt = document.getElementById('payout-settlement-date');
+      const lbl = document.getElementById('payout-day-label');
+      if (dt && !dt.value) dt.value = new Date().toISOString().slice(0, 10);
+      if (dt && lbl) {
+        const parts = dt.value.split('-').map(Number);
+        lbl.textContent = parts.length === 3 ? new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('en-IN', { weekday: 'long' }) : 'Saturday';
+      }
+      if (!c) return;
+      c.innerHTML = appState.karigars
+        .map((kar) => {
+          const { pairs, wages } = calculateKarigarEarnedWages(kar.id);
+          const advBal = Number(kar.advanceBalance) || 0;
+          const defDed = Math.min(advBal, wages);
+          const net = Math.max(0, wages - defDed);
+          return `
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div>
+                <span class="text-sm font-extrabold text-slate-900">${kar.name}</span>
+                <span class="ml-2 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">${kar.process}</span>
+                <p class="text-xs text-slate-600 mt-1">Unsettled: <strong>${pairs} Pairs</strong> • Wages: <strong class="text-emerald-700">₹${wages.toLocaleString()}</strong> • Adv Bal: <strong class="text-indigo-700">₹${advBal.toLocaleString()}</strong></p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2.5">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500">Less Adv (₹)</label>
+                  <input id="adv-deduct-${kar.id}" type="number" min="0" max="${advBal}" value="${defDed}" oninput="recalculateNetPayablePreview('${kar.id}', ${wages}, ${advBal})" class="w-24 rounded-xl border border-slate-300 bg-white px-2 py-1.5 text-xs font-bold" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-indigo-600">+ Extra Adv (₹)</label>
+                  <input id="extra-adv-${kar.id}" type="number" min="0" value="0" oninput="recalculateNetPayablePreview('${kar.id}', ${wages}, ${advBal})" class="w-24 rounded-xl border border-indigo-200 bg-white px-2 py-1.5 text-xs font-bold text-indigo-800" />
+                </div>
+                <div class="rounded-xl bg-white border border-slate-200 px-3 py-1.5">
+                  <span class="block text-[10px] font-bold text-slate-400">Net Paid</span>
+                  <span id="net-payable-${kar.id}" class="text-sm font-extrabold text-slate-900">₹${net.toLocaleString()}</span>
+                  <span id="post-adv-${kar.id}" class="block text-[10px] text-indigo-600">New Adv: ₹${Math.max(0, advBal - defDed).toLocaleString()}</span>
+                </div>
+                <button type="button" onclick="settleKarigarPayout('${kar.id}')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm">Pay Weekly</button>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function renderPayoutHistory() {
+      const c = document.getElementById('payout-history-list');
+      if (!c) return;
+      if (appState.payoutSettlements.length === 0) {
+        c.innerHTML = `<p class="text-xs text-slate-400 py-2">No settlements recorded yet.</p>`;
+        return;
+      }
+      c.innerHTML = appState.payoutSettlements
+        .map((s) => `<div class="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs flex flex-wrap items-center justify-between gap-2"><span><strong>${s.karigarName}</strong> (${s.process}) • ${s.date}</span><div class="flex items-center gap-3"><span>Wages ₹${s.grossWages} • Less Adv ₹${s.advanceDeducted} • <strong class="text-emerald-700">Paid ₹${s.netPaid}</strong></span><button type="button" onclick="deletePayoutSettlement('${s.id}')" class="px-2 py-0.5 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 font-bold hover:bg-rose-100">Delete</button></div></div>`)
+        .join('');
+    }
+
+    function deletePayoutSettlement(setId) {
+      const s = appState.payoutSettlements.find((x) => x.id === setId);
+      if (!s) return;
+      const kar = appState.karigars.find((k) => k.id === s.karigarId);
+      if (kar) {
+        kar.advanceBalance = Math.max(0, (Number(kar.advanceBalance) || 0) + (Number(s.advanceDeducted) || 0) - (Number(s.extraAdvanceGiven) || 0));
+      }
+      appState.workDoneLogs.forEach((w) => {
+        if (w.settledInPayoutId === setId) w.settledInPayoutId = null;
+      });
+      appState.payoutSettlements = appState.payoutSettlements.filter((x) => x.id !== setId);
+      saveAppState();
+      renderEverything();
+      showToast('Payout deleted & restored.');
+    }
+
+    // REPORT TAB
+    function selectReportView(view) {
+      appState.activeReportView = ['karigar', 'wip', 'dispatch'].includes(view) ? view : 'karigar';
+      saveAppState();
+      ['karigar', 'wip', 'dispatch'].forEach((k) => {
+        document.getElementById(`report-panel-${k}`)?.classList.toggle('hidden', k !== appState.activeReportView);
+        const card = document.getElementById(`report-card-${k}`);
+        if (card) {
+          card.className =
+            k === appState.activeReportView
+              ? 'text-left rounded-2xl border-2 border-amber-600 bg-amber-50/70 p-4 transition-all'
+              : 'text-left rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-slate-100 p-4 transition-all';
+        }
+      });
+      document.getElementById('report-active-actions')?.classList.toggle('hidden', appState.activeReportView !== 'karigar');
+      if (appState.activeReportView === 'karigar') renderKarigarFullHistoryReport();
+      else if (appState.activeReportView === 'wip') renderWipStageReport();
+      else renderDispatchSummaryReport();
+    }
+
+    function populateKarigarReportSelect() {
+      const sel = document.getElementById('kr-karigar-select');
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = appState.karigars.map((k) => `<option value="${k.id}">${k.name} (${k.process})</option>`).join('');
+      if (appState.karigars.some((k) => k.id === prev)) sel.value = prev;
+    }
+
+    function inRange(d, from, to) {
+      if (!d) return true;
+      if (from && d < from) return false;
+      if (to && d > to) return false;
+      return true;
+    }
+
+    function buildKarigarReportData(karId, fromDate, toDate) {
+      const kar = appState.karigars.find((k) => k.id === karId);
+      const workRows = appState.workDoneLogs
+        .filter((w) => w.karigarId === karId && inRange(w.date, fromDate, toDate))
+        .map((w) => {
+          const p = sumSizeObj(w.sizes);
+          const r = getRateForArticleAndKarigar(w.articleId, karId, w.process);
+          return { ...w, pairs: p, rate: r, amount: p * r };
+        });
+
+      const pendingCards = appState.jobCards
+        .filter((j) => j.karigarId === karId && !j.settled)
+        .map((j) => {
+          const po = appState.purchaseOrders.find((p) => p.id === j.poId);
+          const art = appState.articles.find((a) => a.id === po?.articleId);
+          const issued = sumSizeObj(j.sizes);
+          const pending = sumSizeObj(getBalancePairsForJobCard(j));
+          return { ...j, poNumber: po?.poNumber || '', articleCode: art?.code || '', issued, done: Math.max(0, issued - pending), pending };
+        });
+
+      const moneyRows = [];
+      appState.advanceLogs
+        .filter((a) => a.karigarId === karId && inRange(a.date, fromDate, toDate))
+        .forEach((a) => moneyRows.push({ date: a.date, type: a.type || 'Advance Given', advTaken: a.amount || 0, advDed: 0, paid: 0 }));
+      appState.payoutSettlements
+        .filter((s) => s.karigarId === karId && inRange(s.date, fromDate, toDate))
+        .forEach((s) => moneyRows.push({ date: s.date, type: 'Weekly Payout', advTaken: s.extraAdvanceGiven || 0, advDed: s.advanceDeducted || 0, paid: s.netPaid || 0 }));
+
+      return { kar, workRows, pendingCards, moneyRows, fromDate, toDate };
+    }
+
+    function renderKarigarHistoryMarkup(data) {
+      if (!data.kar) return `<p class="text-xs text-slate-400 py-6 text-center">Select a Karigar.</p>`;
+      return `
+        <div class="space-y-5">
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Date-Wise Work History</h4>
+            ${
+              data.workRows.length === 0
+                ? `<p class="text-xs text-slate-400 rounded-xl border border-slate-200 bg-slate-50 p-3">No work entries in selected date range.</p>`
+                : `
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                  <table class="w-full text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-slate-100 text-slate-800">
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Date</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">PO / JC</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Article</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Process</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Pairs</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Rate</th>
+                        <th class="border-b border-slate-200 px-3 py-2 text-right">Wages</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${data.workRows.map((r) => `
+                        <tr class="bg-white">
+                          <td class="border-b border-r border-slate-200 px-3 py-2 font-semibold">${r.date}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2">${r.poNumber} • ${r.jobCardId}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 font-bold">${r.articleCode}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2">${r.process}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 text-right font-extrabold">${r.pairs}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 text-right">₹${r.rate}</td>
+                          <td class="border-b border-slate-200 px-3 py-2 text-right font-bold text-emerald-700">₹${r.amount.toLocaleString()}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              `
+            }
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Pending Job Cards</h4>
+            ${
+              data.pendingCards.length === 0
+                ? `<p class="text-xs text-slate-400 rounded-xl border border-slate-200 bg-slate-50 p-3">No pending job cards.</p>`
+                : `
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                  <table class="w-full text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-amber-50 text-amber-950">
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">JC / PO</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Article</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Issued</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Done</th>
+                        <th class="border-b border-slate-200 px-3 py-2 text-right">Pending</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${data.pendingCards.map((c) => `
+                        <tr class="bg-white">
+                          <td class="border-b border-r border-slate-200 px-3 py-2 font-semibold">${c.id} • ${c.poNumber}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 font-bold">${c.articleCode}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 text-right">${c.issued}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 text-right text-emerald-700 font-bold">${c.done}</td>
+                          <td class="border-b border-slate-200 px-3 py-2 text-right text-amber-800 font-extrabold">${c.pending}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              `
+            }
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Advance &amp; Payout History</h4>
+            ${
+              data.moneyRows.length === 0
+                ? `<p class="text-xs text-slate-400 rounded-xl border border-slate-200 bg-slate-50 p-3">No advance or payout entries in range.</p>`
+                : `
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                  <table class="w-full text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-indigo-50 text-indigo-950">
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Date</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Type</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Advance Taken</th>
+                        <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Advance Deducted</th>
+                        <th class="border-b border-slate-200 px-3 py-2 text-right">Cash Paid</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${data.moneyRows.map((m) => `
+                        <tr class="bg-white">
+                          <td class="border-b border-r border-slate-200 px-3 py-2 font-semibold">${m.date}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 font-bold">${m.type}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 text-right text-indigo-700 font-bold">${m.advTaken ? `₹${m.advTaken.toLocaleString()}` : '-'}</td>
+                          <td class="border-b border-r border-slate-200 px-3 py-2 text-right text-rose-700 font-bold">${m.advDed ? `₹${m.advDed.toLocaleString()}` : '-'}</td>
+                          <td class="border-b border-slate-200 px-3 py-2 text-right text-emerald-700 font-extrabold">${m.paid ? `₹${m.paid.toLocaleString()}` : '-'}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              `
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function renderKarigarFullHistoryReport() {
+      populateKarigarReportSelect();
+      const body = document.getElementById('kr-history-report-body');
+      if (!body) return;
+      const karId = document.getElementById('kr-karigar-select')?.value || '';
+      const fromDate = document.getElementById('kr-from-date')?.value || '';
+      const toDate = document.getElementById('kr-to-date')?.value || '';
+      body.innerHTML = renderKarigarHistoryMarkup(buildKarigarReportData(karId, fromDate, toDate));
+    }
+
+    function openKarigarReportPdfModal() {
+      const karId = document.getElementById('kr-karigar-select')?.value || '';
+      const fromDate = document.getElementById('kr-from-date')?.value || '';
+      const toDate = document.getElementById('kr-to-date')?.value || '';
+      const data = buildKarigarReportData(karId, fromDate, toDate);
+      if (!data.kar) return;
+      const modal = document.getElementById('karigar-report-pdf-modal');
+      const content = document.getElementById('karigar-report-pdf-content');
+      if (!modal || !content) return;
+      content.innerHTML = `
+        <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-900">${data.kar.name} (${data.kar.process}) — History Report</h2>
+            <p class="text-xs text-slate-600">Range: ${fromDate || 'All'} to ${toDate || 'Today'}</p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1 rounded-xl bg-amber-100 text-amber-950">Foot Anggle</span>
+        </div>
+        ${renderKarigarHistoryMarkup(data)}
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function closeKarigarReportPdfModal() {
+      document.getElementById('karigar-report-pdf-modal')?.classList.add('hidden');
+      document.body.classList.remove('printing-karigar-report');
+    }
+
+    function printKarigarReportDirect() {
+      openKarigarReportPdfModal();
+      document.body.classList.add('printing-karigar-report');
+      window.print();
+      setTimeout(() => document.body.classList.remove('printing-karigar-report'), 300);
+    }
+
+    function shareKarigarReportWhatsApp() {
+      const karId = document.getElementById('kr-karigar-select')?.value || '';
+      const fromDate = document.getElementById('kr-from-date')?.value || '';
+      const toDate = document.getElementById('kr-to-date')?.value || '';
+      const data = buildKarigarReportData(karId, fromDate, toDate);
+      if (!data.kar) return;
+      const totalPairs = data.workRows.reduce((s, r) => s + r.pairs, 0);
+      const totalWages = data.workRows.reduce((s, r) => s + r.amount, 0);
+      const totalPending = data.pendingCards.reduce((s, c) => s + c.pending, 0);
+      const lines = [
+        `*Foot Anggle — Karigar Report*`,
+        `Karigar: *${data.kar.name}* (${data.kar.process})`,
+        `Work Done: *${totalPairs} Pairs* (₹${totalWages.toLocaleString()})`,
+        `Pending Pairs: *${totalPending} Pairs*`,
+        `Advance Balance: *₹${Number(data.kar.advanceBalance || 0).toLocaleString()}*`
+      ];
+      window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function populateWipFilterDropdowns() {
+      const pSel = document.getElementById('wip-process-select');
+      const poSel = document.getElementById('wip-po-select');
+      if (pSel) {
+        const prev = pSel.value;
+        pSel.innerHTML = `<option value="ALL">All Processes</option>` + PROCESSES.map((p) => `<option value="${p}">${p}</option>`).join('');
+        if (Array.from(pSel.options).some((o) => o.value === prev)) pSel.value = prev;
+      }
+      if (poSel) {
+        const prev = poSel.value;
+        poSel.innerHTML = `<option value="ALL">All POs</option>` + appState.purchaseOrders.map((p) => `<option value="${p.id}">${p.poNumber} (${p.partyName})</option>`).join('');
+        if (Array.from(poSel.options).some((o) => o.value === prev)) poSel.value = prev;
+      }
+    }
+
+    function renderWipStageReport() {
+      populateWipFilterDropdowns();
+      const body = document.getElementById('wip-stage-report-body');
+      if (!body) return;
+      const selProc = document.getElementById('wip-process-select')?.value || 'ALL';
+      const selPo = document.getElementById('wip-po-select')?.value || 'ALL';
+      const fromDate = document.getElementById('wip-from-date')?.value || '';
+      const toDate = document.getElementById('wip-to-date')?.value || '';
+
+      const stages = selProc === 'ALL' ? PROCESSES : [selProc];
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${stages.map((proc) => {
+            const cards = appState.jobCards.filter((j) => {
+              if (j.process !== proc) return false;
+              if (selPo !== 'ALL' && j.poId !== selPo) return false;
+              return inRange(j.issueDate, fromDate, toDate);
+            });
+            const issued = cards.reduce((s, j) => s + sumSizeObj(j.sizes), 0);
+            const done = cards.reduce((s, j) => {
+              const logs = appState.workDoneLogs.filter((w) => w.jobCardId === j.id && inRange(w.date, fromDate, toDate));
+              return s + logs.reduce((ls, w) => ls + sumSizeObj(w.sizes), 0);
+            }, 0);
+            const pending = cards.reduce((s, j) => (j.settled ? s : s + sumSizeObj(getBalancePairsForJobCard(j))), 0);
+            return `
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 space-y-2.5">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <h4 class="text-sm font-extrabold text-slate-900">${proc}</h4>
+                  <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-800">${cards.length} Cards</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center bg-white rounded-xl border border-slate-200 p-2.5 text-xs">
+                  <div><div class="text-[10px] text-slate-400 font-bold">Issued</div><div class="font-extrabold">${issued}</div></div>
+                  <div><div class="text-[10px] text-slate-400 font-bold">Completed</div><div class="font-extrabold text-emerald-700">${done}</div></div>
+                  <div><div class="text-[10px] text-slate-400 font-bold">Pending</div><div class="font-extrabold text-amber-700">${pending}</div></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderDispatchSummaryReport() {
+      const body = document.getElementById('dispatch-report-body');
+      if (!body) return;
+      if (appState.dispatches.length === 0) {
+        body.innerHTML = `<p class="text-xs text-slate-400 py-6 text-center">No dispatch records yet.</p>`;
+        return;
+      }
+      body.innerHTML = `
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-800">
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Date</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Doc</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Party</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-left">Article</th>
+                <th class="border-b border-r border-slate-200 px-3 py-2 text-right">Qty</th>
+                <th class="border-b border-slate-200 px-3 py-2 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${appState.dispatches.map((d) => `
+                <tr class="bg-white">
+                  <td class="border-b border-r border-slate-200 px-3 py-2">${d.date}</td>
+                  <td class="border-b border-r border-slate-200 px-3 py-2 font-bold">${d.docType} ${d.docNumber}</td>
+                  <td class="border-b border-r border-slate-200 px-3 py-2">${d.partyName}</td>
+                  <td class="border-b border-r border-slate-200 px-3 py-2 font-bold">${d.articleNumber}</td>
+                  <td class="border-b border-r border-slate-200 px-3 py-2 text-right font-extrabold">${d.quantity}</td>
+                  <td class="border-b border-slate-200 px-3 py-2 text-right font-extrabold text-emerald-700">₹${Number(d.amount || 0).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderEverything() {
+      switchTab(appState.activeTab || 'masters');
+      renderKpiGrid();
+
+      populateKarigarProcessDropdown();
+      renderArticlesAndRatesTable();
+      renderKarigarsMasterList();
+      renderPartiesMasterList();
+
+      populatePoArticleDropdown(appState.editingPoId ? appState.purchaseOrders.find((p) => p.id === appState.editingPoId)?.articleId : '');
+      if (!appState.editingPoId && !document.getElementById('po-size-grid')?.children.length) {
+        renderPoSizeInputs(createSizeObj(0));
+      }
+      renderSavedPosList();
+
+      populateJobCardDropdowns();
+      populateWorkDoneDropdown();
+      renderActiveJobCardsList();
+
+      populateDispatchDropdowns();
+      renderSavedDispatchesList();
+
+      populateAdvanceKarigarDropdown();
+      populateRateMasterDropdowns();
+      renderSavedKarigarRatesList();
+      renderPayoutCards();
+      renderPayoutHistory();
+
+      if (appState.activeTab === 'report') {
+        selectReportView(appState.activeReportView || 'karigar');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderEverything();
+    });
+  </script>
+</body>
+</html>
